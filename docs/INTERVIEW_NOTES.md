@@ -23,12 +23,12 @@ in your feature engineering?"*
 ## 2. Survivorship Bias
 
 **Explanation:** Every user in this dataset placed at least 4 orders. Customers
-who tried Instacart once and never returned are completely absent. This means
+who placed fewer than 4 orders are completely absent. This means
 our analysis only describes differences among already-retained customers — we
 cannot say anything about what makes a first-time buyer come back at all. The
 associations we find (e.g., bigger first baskets are associated with becoming a
-heavy user) might look different if we could also see the users who churned
-early, because those users might also have had large first baskets but dropped
+heavy user) might look different if we could also see the users who placed
+fewer than 4 orders, because those users might also have had large first baskets but dropped
 off for reasons invisible to us.
 
 **Likely interview question:** *"Your data only has users with 4+ orders. How

@@ -2,7 +2,7 @@
 
 ## Bottom Line
 
-- **Early pacing separates future heavy users far more than basket composition**: A model using early basket and timing features achieves a cross-validated AUC of 0.57 (~0.57), while adding early inter-order gaps raises AUC to 0.76 (~0.76).
+- **Early pacing separates future heavy users far more than basket composition**: A model using early basket and timing features achieves a cross-validated AUC of 0.57, while adding early inter-order gaps raises AUC to 0.76.
 - **Circularity caveat**: Part of the gap link is built into how "heavy" is defined. Cumulative order count is mechanically linked to order cadence, assuming comparable observation windows.
 - **Recommended next step**: It is unknown whether customer pace can be influenced. The highest-leverage next step is to run A/B test designs targeting second-order timing to test whether pacing can be accelerated.
 
@@ -17,7 +17,7 @@ Which early shopping behaviours (orders 1–3) are associated with becoming a he
 ## Data and Its Limits
 
 We analysed **3,421,083 orders** from **206,209 users** in the Instacart public dataset.
-- **Survivorship bias (critical)**: Every customer in this dataset has at least 4 orders. Customers who tried the service once or twice and left are completely absent. All findings describe observational associations among already-retained customers, not the full acquisition funnel.
+- **Survivorship bias (critical)**: Every customer in this dataset has at least 4 orders. Customers who placed fewer than 4 orders are completely absent. All findings describe observational associations among already-retained customers, not the full acquisition funnel.
 - **Total orders capped at 100**: Order sequence is truncated at 100 orders, right-censoring the extreme power-user tail.
 - **Median gap capped at 30 days**: `days_since_prior_order` is truncated at 30 days (evidenced by a 19.2x spike at 30 vs 29 days), compressing long churn gaps.
 - **No prices, revenue, user demographics, or calendar dates**: Basket size is item count, not currency value.
@@ -27,23 +27,23 @@ We analysed **3,421,083 orders** from **206,209 users** in the Instacart public 
 
 ## Method (3–5 lines)
 
-Features were computed exclusively from each customer's first 3 orders; outcomes (total orders, cadence) were measured from order 4 onward to prevent leakage. "Heavy user" was defined as the top quartile by total orders (>= 20 orders, n = 53,931). We compared early features using bootstrap CIs and Cohen's d, then fit standardized logistic regressions. To eliminate collinearity, `first_order_size` and `n_aisles_order1` were dropped, ensuring all Variance Inflation Factors are strictly < 2.5 (true maximum VIF across both models = 2.28) with zero sign flips.
+Features were computed exclusively from each customer's first 3 orders; outcomes (total orders, cadence) were measured from order 4 onward to prevent leakage. "Heavy user" was defined as the top quartile by total orders: 20+ orders (about 26.2% of users, n = 53,931). We compared early features using bootstrap CIs and Cohen's d, then fit standardized logistic regressions. To eliminate collinearity, `first_order_size` and `n_aisles_order1` were dropped, ensuring all Variance Inflation Factors are strictly < 2.5 (true maximum VIF across both models = 2.28) with zero sign flips.
 
 ---
 
 ## Findings: Lead Model (Early Basket & Timing Features)
 
-Leading with the no-gap model, early basket composition and timing features achieve a cross-validated AUC of **0.568** (~0.57).
+Leading with the no-gap model, early basket composition and timing features achieve a cross-validated AUC of **0.568**.
 
-**Plain-English takeaway**: Basket-composition and breadth effects are **negligible to small**. Every basket feature has a Cohen's d < 0.20 (negligible to small by standard conventions), and odds ratios are modest (1.03–1.14). While statistically detectable due to the large sample size (N = 206,209), early basket mix alone offers limited ability to discriminate future heavy users.
+**Plain-English takeaway**: Basket-composition and breadth effects are **negligible to small**. Every basket feature has a Cohen's d < 0.20 (negligible by standard conventions), and odds ratios are modest (1.03–1.14). While statistically detectable due to the large sample size (N = 206,209), early basket mix alone offers limited ability to discriminate future heavy users.
 
 | Feature | Odds Ratio (std) | 95% CI | Univariate Cohen's d | Effect Magnitude |
 |---|---|---|---|---|
-| produce share (1st order) | 1.14 | [1.13, 1.16] | +0.090 | negligible to small |
-| dairy share (1st order) | 1.13 | [1.12, 1.14] | +0.089 | negligible to small |
-| morning-order share (6am–11am) | 1.12 | [1.11, 1.13] | +0.121 | negligible to small |
-| average basket size (orders 1–3) | 1.10 | [1.08, 1.11] | +0.122 | negligible to small |
-| snacks share (1st order) | 1.07 | [1.06, 1.09] | +0.025 | negligible to small |
+| produce share (1st order) | 1.14 | [1.13, 1.16] | +0.090 | negligible (< 0.2) |
+| dairy share (1st order) | 1.13 | [1.12, 1.14] | +0.089 | negligible (< 0.2) |
+| morning-order share (6am–11am) | 1.12 | [1.11, 1.13] | +0.121 | negligible (< 0.2) |
+| average basket size (orders 1–3) | 1.10 | [1.08, 1.11] | +0.122 | negligible (< 0.2) |
+| snacks share (1st order) | 1.07 | [1.06, 1.09] | +0.025 | negligible (< 0.2) |
 
 ---
 
@@ -54,7 +54,7 @@ When early inter-order gaps (`days_to_second_order` and `days_to_third_order`) a
 However, this association is **likely partly mechanical, assuming comparable observation windows**:
 - "Heavy user" status is defined by accumulated total orders across the dataset window.
 - A customer who orders every 5 days will mechanically accumulate 20+ orders much faster than a customer who orders every 25 days.
-- It is **unknown whether pace can be influenced** by product features or marketing interventions. Pacing reflects a customer's underlying household grocery rhythm. We present early pace as a separate finding about cadence velocity, rather than an actionable basket feature.
+- It is **unknown whether pace can be influenced** by product features or marketing interventions. We present early pace as a separate finding about cadence velocity, rather than an actionable basket feature.
 
 ---
 
@@ -99,14 +99,14 @@ Segments are defined at order 3 using two specific metrics:
 Because **second-order timing is the earliest point where a test could intervene**, all three proposals target the second order. Targets are defined strictly using information available when the nudge fires, not post-hoc order-3 segments. All nudges are prospective test designs (see `docs/nudges.md`):
 
 1. **Replenishment-timed reminder for large first baskets (Hypothesis)**:
-   Target customers whose first order contained >= 8 items who have not placed order 2 by day 11 with a reminder timed to perishable staple depletion.
+   Target customers whose first order contained >= 8 items who have not placed order 2 by day 11 (the 45th percentile of days to second order) with a reminder timed to perishable staple depletion.
 2. **Second-order re-engagement incentive for slow starters (Hypothesis)**:
-   Target customers whose second order has arrived later than the population median gap (day 15+ without order 2) with a time-limited free delivery incentive.
+   Target customers who have placed exactly 1 order and have not placed order 2 by day 13 (the empirical median of days to second order) with a time-limited free delivery incentive.
    *Guardrail*: Incentive cost per retained customer, noting that the dataset contains no prices.
 3. **"Reorder in 1 Click" quick-cart drawer on visit 2 (Hypothesis)**:
    Surface past staples on visit 2 session start to reduce cart-building friction.
 
-**Caveat on survivorship**: The data contains no customers who never returned. These nudges risk reaching people who would return anyway. An untreated holdout control is mandatory to measure true incremental return.
+**Caveat on survivorship**: The data contains no customers who placed fewer than 4 orders. These nudges risk reaching people who would return anyway. An untreated holdout control is mandatory to measure true incremental return. The data cannot provide an unbiased baseline return rate, so sample size must be estimated from production data.
 
 ---
 

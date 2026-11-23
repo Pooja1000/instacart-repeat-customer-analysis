@@ -34,8 +34,8 @@ aisles and 21 departments.
 
 - **Pacing dominates basket features**: Early return cadence shows a medium association with becoming a heavy user (Cohen's d about 0.72–0.76; gap model AUC 0.76).
 - **Basket-composition effects are negligible to small**: Every early basket feature has a Cohen's d < 0.20 and modest odds ratios (1.03–1.14; lead model AUC 0.57).
-- **Circularity in pacing**: The strong link between early gaps and total orders is likely partly mechanical, assuming comparable observation windows, because order accumulation is mathematically tied to cadence.
-- **Pacing drives lifecycle differences**: At the order-3 decision point, fast vs slow return segments differ by 28–32 percentage points in heavy-user rate (e.g. 42.8% vs 12.2%), whereas basket-size segments differ by only 2–4 percentage points (e.g. 42.8% vs 38.4%).
+- **Circularity in pacing**: The strong link between early gaps and total orders is likely partly mechanical, assuming comparable observation windows, because order accumulation is mechanically linked, if observation windows are comparable.
+- **Pace segments differ most**: At the order-3 decision point, fast vs slow return segments differ by 28–32 percentage points in heavy-user rate (e.g. 42.8% vs 12.2%), whereas basket-size segments differ by only 2–4 percentage points (e.g. 42.8% vs 38.4%).
 - **Stable cadence overlap**: Across 6, 7, and 8-day thresholds, 56–59% of fast-cadence users qualify as heavy users, while 41–44% do not.
 
 ## Key Visualizations
@@ -49,7 +49,7 @@ aisles and 21 departments.
 ## Method
 
 - **Leakage prevention**: Features from orders 1–3 only; outcomes from orders 4+ only.
-- **Primary outcome**: "Heavy user" = top quartile by total orders (>= 20 orders).
+- **Primary outcome**: "Heavy user" = top quartile by total orders: 20+ orders (about 26.2% of users).
 - **Secondary outcome**: "Fast cadence" = median gap in orders 4+ <= 7 days.
 - **Collinearity control**: `first_order_size` and `n_aisles_order1` dropped; all VIFs strictly < 2.5 (true maximum VIF across both models = 2.28).
 - **Lead model (without gaps)**: Standardized logistic regression; headline cross-validated AUC: **0.568** (~0.57).
@@ -81,7 +81,7 @@ python src/generate_docs.py             # Memo, README, CV bullet from results.j
 
 ## Limitations
 
-1. **Survivorship bias (critical)**: Every user has >= 4 orders. Customers who churned after 1–2 orders are completely absent.
+1. **Survivorship bias (critical)**: Every user has >= 4 orders. Customers who placed fewer than 4 orders are completely absent.
 2. **Total orders capped at 100**: Order sequence is truncated at 100 orders, compressing the extreme power-user tail.
 3. **Median gap capped at 30 days**: `days_since_prior_order` is right-censored at 30 (19.2x spike at 30 vs 29 days).
 4. **No prices or revenue**: Basket size is item count, not currency value.

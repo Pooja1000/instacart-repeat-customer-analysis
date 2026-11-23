@@ -287,8 +287,8 @@ ax.barh(y_pos, ds, color=bar_colors, edgecolor="#4a5568", linewidth=0.6, height=
 ax.set_yticks(y_pos)
 ax.set_yticklabels(labels, fontsize=9)
 ax.set_xlabel("Cohen's d (heavy − non-heavy)")
-ax.set_title("Feature differences: heavy vs non-heavy users\n"
-             "Neutral palette: dark slate = medium/large (|d|≥0.5); light gray = negligible (|d|<0.2)")
+ax.set_title("Standardised Differences Between Heavy and Non-Heavy Customers (Cohen's d)\n"
+             "Dark slate = medium (|d| ≥ 0.5); Light gray = negligible (|d| < 0.2)")
 ax.axvline(0, color="#2d3748", linewidth=0.8)
 ax.axvline(0.2, color="#718096", linewidth=0.8, linestyle="--", label="Small effect (|d|=0.2)")
 ax.axvline(-0.2, color="#718096", linewidth=0.8, linestyle="--")
@@ -448,12 +448,12 @@ def plot_odds_ratios(odds_ratios, features, title, filename):
 
 
 plot_odds_ratios(or_no_gap, feat_no_gap,
-                 "Odds ratios for heavy-user status\n(without gap features — lead model; neutral palette)",
+                 "Odds Ratios for Heavy-User Status\n(Lead Model Without Gap Features)",
                  "odds_ratios_no_gap.png")
 flush_print("  ✓ odds_ratios_no_gap.png")
 
 plot_odds_ratios(or_with_gap, feat_with_gap,
-                 "Odds ratios for heavy-user status\n(with gap features — secondary model; neutral palette)",
+                 "Odds Ratios for Heavy-User Status\n(Secondary Model With Gap Features)",
                  "odds_ratios_with_gap.png")
 flush_print("  ✓ odds_ratios_with_gap.png")
 
@@ -503,6 +503,22 @@ for thresh in [6, 7, 8]:
         "pct_fast_are_heavy": pct_f_h,
     }
     flush_print(f"  Cadence sensitivity {thresh}d: {fast.sum():,} fast users; {pct_h_f}% heavy are fast; {pct_f_h}% fast are heavy")
+
+# Empirical distribution of days_to_second_order
+d2 = df["days_to_second_order"].dropna()
+pctiles = [10, 25, 40, 45, 50, 60, 70, 75, 80, 90]
+pctl_vals = {f"p{p}": round(float(np.percentile(d2, p)), 1) for p in pctiles}
+trigger_days = [7, 10, 11, 13, 14, 15, 20, 21, 28]
+n_after_days = {f"day_{d}": int((d2 > d).sum()) for d in trigger_days}
+pct_after_days = {f"day_{d}": round(float((d2 > d).mean() * 100), 1) for d in trigger_days}
+
+days_to_second_order_dist = {
+    "percentiles": pctl_vals,
+    "mean": round(float(d2.mean()), 2),
+    "std": round(float(d2.std()), 2),
+    "n_after_trigger_day": n_after_days,
+    "pct_after_trigger_day": pct_after_days,
+}
 
 
 # ══════════════════════════════════════════════════════════════
@@ -574,7 +590,7 @@ ax.set_yticks(y_positions)
 ax.set_yticklabels([FEATURE_LABELS.get(f, f) for f in feats], fontsize=9)
 ax.axvline(1.0, color="#2d3748", linewidth=0.8)
 ax.set_xlabel("Odds ratio (standardised, 95% CI)")
-ax.set_title("Sensitivity check: odds ratios across heavy-user thresholds (neutral palette)")
+ax.set_title("Sensitivity Check: Odds Ratios Across Heavy-User Thresholds")
 ax.legend(loc="best", fontsize=9)
 ax.invert_yaxis()
 plt.tight_layout()
@@ -646,7 +662,7 @@ ax.set_title("Average total orders by segment")
 for i, v in enumerate(avg_ords):
     ax.text(i, v + 0.3, f"{v:.1f}", ha="center", fontsize=8)
 
-plt.suptitle("Lifecycle segments (defined from orders 1–3 only)", fontsize=13)
+plt.suptitle("Order-3 Lifecycle Segments: Early Size & Pace vs Later Outcomes", fontsize=13)
 plt.tight_layout()
 plt.savefig(os.path.join(FIGURES_DIR, "lifecycle_segments.png"), dpi=150,
             bbox_inches="tight")
@@ -701,6 +717,7 @@ results["phase2_analysis"] = {
     "logistic_regression": regression_results,
     "heavy_fast_overlap": overlap,
     "fast_cadence_sensitivity": fast_cadence_sensitivity,
+    "days_to_second_order_distribution": days_to_second_order_dist,
     "sensitivity": sensitivity_results,
     "lifecycle_segments": segment_summary,
     "reorder_curve": {

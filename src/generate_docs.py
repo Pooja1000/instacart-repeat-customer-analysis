@@ -31,6 +31,19 @@ def top_features_by_or(regression, n=5):
     return sorted_feats[:n]
 
 
+def cohens_d_bracket(d):
+    """Return exact Cohen's d interpretation bracket."""
+    abs_d = abs(d)
+    if abs_d < 0.2:
+        return "negligible (< 0.2)"
+    elif abs_d < 0.5:
+        return "small (0.2–0.5)"
+    elif abs_d < 0.8:
+        return "medium (0.5–0.8)"
+    else:
+        return "large (>= 0.8)"
+
+
 LABEL = {
     "first_order_size": "first-order basket size",
     "avg_basket_size_1_3": "average basket size (orders 1–3)",
@@ -69,6 +82,7 @@ n_depts = p0["row_counts"]["departments"]
 n_heavy = p1["heavy_user_counts_p75"].get("1", 0)
 n_non_heavy = p1["heavy_user_counts_p75"].get("0", 0)
 threshold = int(p1["thresholds"]["heavy_p75"])
+pct_heavy_users = round(n_heavy / n_users * 100, 1)
 
 overlap = p2["heavy_fast_overlap"]
 # Cadence sensitivity
@@ -108,7 +122,7 @@ memo = f"""# Executive Memo: What Turns a Grocery Customer into a Regular?
 
 ## Bottom Line
 
-- **Early pacing separates future heavy users far more than basket composition**: A model using early basket and timing features achieves a cross-validated AUC of {lead_auc:.2f} (~0.57), while adding early inter-order gaps raises AUC to {gap_auc:.2f} (~0.76).
+- **Early pacing separates future heavy users far more than basket composition**: A model using early basket and timing features achieves a cross-validated AUC of {lead_auc:.2f}, while adding early inter-order gaps raises AUC to {gap_auc:.2f}.
 - **Circularity caveat**: Part of the gap link is built into how "heavy" is defined. Cumulative order count is mechanically linked to order cadence, assuming comparable observation windows.
 - **Recommended next step**: It is unknown whether customer pace can be influenced. The highest-leverage next step is to run A/B test designs targeting second-order timing to test whether pacing can be accelerated.
 
@@ -123,7 +137,7 @@ Which early shopping behaviours (orders 1–3) are associated with becoming a he
 ## Data and Its Limits
 
 We analysed **{n_orders:,} orders** from **{n_users:,} users** in the Instacart public dataset.
-- **Survivorship bias (critical)**: Every customer in this dataset has at least 4 orders. Customers who tried the service once or twice and left are completely absent. All findings describe observational associations among already-retained customers, not the full acquisition funnel.
+- **Survivorship bias (critical)**: Every customer in this dataset has at least 4 orders. Customers who placed fewer than 4 orders are completely absent. All findings describe observational associations among already-retained customers, not the full acquisition funnel.
 - **Total orders capped at 100**: Order sequence is truncated at 100 orders, right-censoring the extreme power-user tail.
 - **Median gap capped at 30 days**: `days_since_prior_order` is truncated at 30 days (evidenced by a 19.2x spike at 30 vs 29 days), compressing long churn gaps.
 - **No prices, revenue, user demographics, or calendar dates**: Basket size is item count, not currency value.
@@ -133,15 +147,15 @@ We analysed **{n_orders:,} orders** from **{n_users:,} users** in the Instacart 
 
 ## Method (3–5 lines)
 
-Features were computed exclusively from each customer's first 3 orders; outcomes (total orders, cadence) were measured from order 4 onward to prevent leakage. "Heavy user" was defined as the top quartile by total orders (>= {threshold} orders, n = {n_heavy:,}). We compared early features using bootstrap CIs and Cohen's d, then fit standardized logistic regressions. To eliminate collinearity, `first_order_size` and `n_aisles_order1` were dropped, ensuring all Variance Inflation Factors are strictly < 2.5 (true maximum VIF across both models = {true_max_vif:.2f}) with zero sign flips.
+Features were computed exclusively from each customer's first 3 orders; outcomes (total orders, cadence) were measured from order 4 onward to prevent leakage. "Heavy user" was defined as the top quartile by total orders: 20+ orders (about {pct_heavy_users}% of users, n = {n_heavy:,}). We compared early features using bootstrap CIs and Cohen's d, then fit standardized logistic regressions. To eliminate collinearity, `first_order_size` and `n_aisles_order1` were dropped, ensuring all Variance Inflation Factors are strictly < 2.5 (true maximum VIF across both models = {true_max_vif:.2f}) with zero sign flips.
 
 ---
 
 ## Findings: Lead Model (Early Basket & Timing Features)
 
-Leading with the no-gap model, early basket composition and timing features achieve a cross-validated AUC of **{lead_auc:.3f}** (~0.57).
+Leading with the no-gap model, early basket composition and timing features achieve a cross-validated AUC of **{lead_auc:.3f}**.
 
-**Plain-English takeaway**: Basket-composition and breadth effects are **negligible to small**. Every basket feature has a Cohen's d < 0.20 (negligible to small by standard conventions), and odds ratios are modest (1.03–1.14). While statistically detectable due to the large sample size (N = {n_users:,}), early basket mix alone offers limited ability to discriminate future heavy users.
+**Plain-English takeaway**: Basket-composition and breadth effects are **negligible to small**. Every basket feature has a Cohen's d < 0.20 (negligible by standard conventions), and odds ratios are modest (1.03–1.14). While statistically detectable due to the large sample size (N = {n_users:,}), early basket mix alone offers limited ability to discriminate future heavy users.
 
 | Feature | Odds Ratio (std) | 95% CI | Univariate Cohen's d | Effect Magnitude |
 |---|---|---|---|---|
@@ -149,7 +163,7 @@ Leading with the no-gap model, early basket composition and timing features achi
 
 for feat, vals in top_or_lead:
     d_val = p2["feature_comparisons"].get(feat, {}).get("cohens_d", 0.0)
-    memo += f"| {LABEL.get(feat, feat)} | {vals['odds_ratio']:.2f} | [{vals['ci_lower']:.2f}, {vals['ci_upper']:.2f}] | {d_val:+.3f} | negligible to small |\n"
+    memo += f"| {LABEL.get(feat, feat)} | {vals['odds_ratio']:.2f} | [{vals['ci_lower']:.2f}, {vals['ci_upper']:.2f}] | {d_val:+.3f} | {cohens_d_bracket(d_val)} |\n"
 
 memo += f"""
 ---
@@ -161,7 +175,7 @@ When early inter-order gaps (`days_to_second_order` and `days_to_third_order`) a
 However, this association is **likely partly mechanical, assuming comparable observation windows**:
 - "Heavy user" status is defined by accumulated total orders across the dataset window.
 - A customer who orders every 5 days will mechanically accumulate 20+ orders much faster than a customer who orders every 25 days.
-- It is **unknown whether pace can be influenced** by product features or marketing interventions. Pacing reflects a customer's underlying household grocery rhythm. We present early pace as a separate finding about cadence velocity, rather than an actionable basket feature.
+- It is **unknown whether pace can be influenced** by product features or marketing interventions. We present early pace as a separate finding about cadence velocity, rather than an actionable basket feature.
 
 ---
 
@@ -206,14 +220,14 @@ Segments are defined at order 3 using two specific metrics:
 Because **second-order timing is the earliest point where a test could intervene**, all three proposals target the second order. Targets are defined strictly using information available when the nudge fires, not post-hoc order-3 segments. All nudges are prospective test designs (see `docs/nudges.md`):
 
 1. **Replenishment-timed reminder for large first baskets (Hypothesis)**:
-   Target customers whose first order contained >= 8 items who have not placed order 2 by day 11 with a reminder timed to perishable staple depletion.
+   Target customers whose first order contained >= 8 items who have not placed order 2 by day 11 (the 45th percentile of days to second order) with a reminder timed to perishable staple depletion.
 2. **Second-order re-engagement incentive for slow starters (Hypothesis)**:
-   Target customers whose second order has arrived later than the population median gap (day 15+ without order 2) with a time-limited free delivery incentive.
+   Target customers who have placed exactly 1 order and have not placed order 2 by day 13 (the empirical median of days to second order) with a time-limited free delivery incentive.
    *Guardrail*: Incentive cost per retained customer, noting that the dataset contains no prices.
 3. **"Reorder in 1 Click" quick-cart drawer on visit 2 (Hypothesis)**:
    Surface past staples on visit 2 session start to reduce cart-building friction.
 
-**Caveat on survivorship**: The data contains no customers who never returned. These nudges risk reaching people who would return anyway. An untreated holdout control is mandatory to measure true incremental return.
+**Caveat on survivorship**: The data contains no customers who placed fewer than 4 orders. These nudges risk reaching people who would return anyway. An untreated holdout control is mandatory to measure true incremental return. The data cannot provide an unbiased baseline return rate, so sample size must be estimated from production data.
 
 ---
 
@@ -236,7 +250,7 @@ print(f"✓ {memo_path}")
 # ══════════════════════════════════════════════════════════════
 cv_bullet = f"""# CV Bullet
 
-> Analysed {n_orders:,} orders from {n_users:,} repeat customers to identify early behaviours associated with becoming a heavy user (>= {threshold} orders); found early return pace strongly differentiated heavy users, while basket-composition effects were negligible to small (lead OR {lead_or:.2f} [95% CI {lead_or_ci[0]:.2f}–{lead_or_ci[1]:.2f}] for {LABEL.get(lead_feat, lead_feat)}; all basket Cohen's d < 0.20); proposed 3 A/B test designs targeting second-order timing with defined success and guardrail metrics.
+> Analysed {n_orders:,} orders from {n_users:,} repeat customers to identify early behaviours associated with becoming a heavy user (20+ orders, about {pct_heavy_users}% of users); found early return pace strongly differentiated heavy users, while basket-composition effects were negligible to small (lead OR {lead_or:.2f} [95% CI {lead_or_ci[0]:.2f}–{lead_or_ci[1]:.2f}] for {LABEL.get(lead_feat, lead_feat)}; all basket Cohen's d < 0.20); proposed 3 A/B test designs targeting second-order timing with defined success and guardrail metrics.
 """
 
 cv_path = os.path.join(PROJECT_ROOT, "docs", "cv_bullet.md")
@@ -284,8 +298,8 @@ aisles and {n_depts} departments.
 
 - **Pacing dominates basket features**: Early return cadence shows a medium association with becoming a heavy user (Cohen's d about 0.72–0.76; gap model AUC 0.76).
 - **Basket-composition effects are negligible to small**: Every early basket feature has a Cohen's d < 0.20 and modest odds ratios (1.03–1.14; lead model AUC 0.57).
-- **Circularity in pacing**: The strong link between early gaps and total orders is likely partly mechanical, assuming comparable observation windows, because order accumulation is mathematically tied to cadence.
-- **Pacing drives lifecycle differences**: At the order-3 decision point, fast vs slow return segments differ by 28–32 percentage points in heavy-user rate (e.g. 42.8% vs 12.2%), whereas basket-size segments differ by only 2–4 percentage points (e.g. 42.8% vs 38.4%).
+- **Circularity in pacing**: The strong link between early gaps and total orders is likely partly mechanical, assuming comparable observation windows, because order accumulation is mechanically linked, if observation windows are comparable.
+- **Pace segments differ most**: At the order-3 decision point, fast vs slow return segments differ by 28–32 percentage points in heavy-user rate (e.g. 42.8% vs 12.2%), whereas basket-size segments differ by only 2–4 percentage points (e.g. 42.8% vs 38.4%).
 - **Stable cadence overlap**: Across 6, 7, and 8-day thresholds, 56–59% of fast-cadence users qualify as heavy users, while 41–44% do not.
 
 ## Key Visualizations
@@ -299,7 +313,7 @@ aisles and {n_depts} departments.
 ## Method
 
 - **Leakage prevention**: Features from orders 1–3 only; outcomes from orders 4+ only.
-- **Primary outcome**: "Heavy user" = top quartile by total orders (>= {threshold} orders).
+- **Primary outcome**: "Heavy user" = top quartile by total orders: 20+ orders (about {pct_heavy_users}% of users).
 - **Secondary outcome**: "Fast cadence" = median gap in orders 4+ <= 7 days.
 - **Collinearity control**: `first_order_size` and `n_aisles_order1` dropped; all VIFs strictly < 2.5 (true maximum VIF across both models = {true_max_vif:.2f}).
 - **Lead model (without gaps)**: Standardized logistic regression; headline cross-validated AUC: **{lead_auc:.3f}** (~0.57).
@@ -331,7 +345,7 @@ python src/generate_docs.py             # Memo, README, CV bullet from results.j
 
 ## Limitations
 
-1. **Survivorship bias (critical)**: Every user has >= 4 orders. Customers who churned after 1–2 orders are completely absent.
+1. **Survivorship bias (critical)**: Every user has >= 4 orders. Customers who placed fewer than 4 orders are completely absent.
 2. **Total orders capped at 100**: Order sequence is truncated at 100 orders, compressing the extreme power-user tail.
 3. **Median gap capped at 30 days**: `days_since_prior_order` is right-censored at 30 (19.2x spike at 30 vs 29 days).
 4. **No prices or revenue**: Basket size is item count, not currency value.
