@@ -33,17 +33,25 @@ departments.
 
 ## How to Run
 
+Run the entire pipeline with a single command:
+
 ```bash
-pip install -r requirements.txt
-make run          # runs: tests → Phase 0 → SQL pipeline → analysis → docs
+# Windows PowerShell (no make.exe needed):
+python run.py
+# or
+.un.ps1
+
+# Unix / macOS / environments with GNU make:
+make run
 ```
 
 Alternatively, step by step:
 ```bash
-python src/generate_phase0_results.py   # data reality check → results.json
+python -m pytest tests/ -v              # Run leakage & integrity tests
+python src/generate_phase0_results.py   # Data reality check → results.json
 python src/run_pipeline.py              # SQL pipeline → parquet
-python src/analysis.py                  # analysis → charts + results.json
-python src/generate_docs.py             # memo, README, CV bullet from results.json
+python src/analysis.py                  # Analysis → charts + results.json
+python src/generate_docs.py             # Memo, README, CV bullet from results.json
 ```
 
 ## Limitations
