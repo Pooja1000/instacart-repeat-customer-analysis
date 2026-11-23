@@ -1,3 +1,3 @@
 # CV Bullet
 
-> Analysed 3,421,083 orders from 206,209 repeat customers to identify early behaviours associated with becoming a heavy user (20+ orders, about 26.2% of users); found early return pace strongly differentiated heavy users, while basket-composition effects were negligible to small (lead OR 1.14 [95% CI 1.13–1.16] for produce share (1st order); all basket Cohen's d < 0.20); proposed 3 A/B test designs targeting second-order timing with defined success and guardrail metrics.
+> Analysed 3.4M Instacart orders (SQL, DuckDB, Python) to study what separates heavy repeat customers; found early reorder pace was far more informative than first-basket content (cross-validated AUC 0.76 vs 0.57); designed 3 holdout-controlled A/B tests targeting second-order timing.

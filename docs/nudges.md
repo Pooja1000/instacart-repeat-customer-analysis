@@ -36,7 +36,7 @@ The table below shows key percentiles of `days_to_second_order` in the dataset, 
 |---|---|---|---|---|
 | 10th percentile (trigger day 3) | 3.0 days | 184,874 | 89.7% | Rapid initial reorder |
 | 25th percentile (trigger day 7) | 7.0 days | 139,036 | 67.4% | Typical fast-cadence threshold |
-| **45th percentile (trigger day 11)** | **11.0 days** | **110,240** | **53.5%** | **Nudge 1 Trigger** (pantry staple replenishment window) |
+| **45th percentile (trigger day 11)** | **11.0 days** | **110,240** | **53.5%** | **Nudge 1 trigger (hypothesised replenishment window; not shown by this data)** |
 | **50th percentile (median, trigger day 13)** | **13.0 days** | **98,936** | **48.0%** | **Nudge 2 Trigger** (median return cadence milestone) |
 | 55th percentile (trigger day 14) | 14.0 days | 91,256 | 44.3% | Two-week post-purchase mark |
 | 60th percentile (trigger day 16) | 16.0 days | 82,246 | 39.9% | Extended return window |

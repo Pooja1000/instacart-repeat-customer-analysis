@@ -253,9 +253,9 @@ print(f"✓ {memo_path}")
 # ══════════════════════════════════════════════════════════════
 # 2. CV BULLET (docs/cv_bullet.md)
 # ══════════════════════════════════════════════════════════════
-cv_bullet = f"""# CV Bullet
+cv_bullet = """# CV Bullet
 
-> Analysed {n_orders:,} orders from {n_users:,} repeat customers to identify early behaviours associated with becoming a heavy user (20+ orders, about {pct_heavy_users}% of users); found early return pace strongly differentiated heavy users, while basket-composition effects were negligible to small (lead OR {lead_or:.2f} [95% CI {lead_or_ci[0]:.2f}–{lead_or_ci[1]:.2f}] for {LABEL.get(lead_feat, lead_feat)}; all basket Cohen's d < 0.20); proposed 3 A/B test designs targeting second-order timing with defined success and guardrail metrics.
+> Analysed 3.4M Instacart orders (SQL, DuckDB, Python) to study what separates heavy repeat customers; found early reorder pace was far more informative than first-basket content (cross-validated AUC 0.76 vs 0.57); designed 3 holdout-controlled A/B tests targeting second-order timing.
 """
 
 cv_path = os.path.join(PROJECT_ROOT, "docs", "cv_bullet.md")
@@ -440,10 +440,10 @@ The table below shows key percentiles of `days_to_second_order` in the dataset, 
 |---|---|---|---|---|
 | 10th percentile (trigger day 3) | 3.0 days | {n_after.get('day_3', 184874):,} | {pct_after.get('day_3', 89.7)}% | Rapid initial reorder |
 | 25th percentile (trigger day 7) | 7.0 days | {n_after.get('day_7', 139036):,} | {pct_after.get('day_7', 67.4)}% | Typical fast-cadence threshold |
-| **45th percentile (trigger day 11)** | **11.0 days** | **{n_after.get('day_11', 110240):,}** | **{pct_after.get('day_11', 53.5)}%** | **Nudge 1 Trigger** (pantry staple replenishment window) |
+| **45th percentile (trigger day 11)** | **11.0 days** | **{n_after.get('day_11', 110240):,}** | **{pct_after.get('day_11', 53.5)}%** | **Nudge 1 trigger (hypothesised replenishment window; not shown by this data)** |
 | **50th percentile (median, trigger day 13)** | **13.0 days** | **{n_after.get('day_13', 98936):,}** | **{pct_after.get('day_13', 48.0)}%** | **Nudge 2 Trigger** (median return cadence milestone) |
 | 55th percentile (trigger day 14) | 14.0 days | {n_after.get('day_14', 91256):,} | {pct_after.get('day_14', 44.3)}% | Two-week post-purchase mark |
-| 60th percentile (trigger day 16) | 16.0 days | {n_after.get('day_16', 82904):,} | {pct_after.get('day_16', 40.2)}% | Extended return window |
+| 60th percentile (trigger day 16) | 16.0 days | {n_after.get('day_16', 82246):,} | {pct_after.get('day_16', 39.9)}% | Extended return window |
 | 75th percentile (trigger day 28) | 28.0 days | {n_after.get('day_28', 49825):,} | {pct_after.get('day_28', 24.2)}% | Delayed return tail |
 
 > **Selection Effect Note (Descriptive)**: This distribution is descriptive and reflects only customers who placed at least 4 orders in the dataset. Customers who placed fewer than 4 orders are not in this data. In a live production environment, true one-time dropouts will shift these distributions and lower baseline conversion rates.
