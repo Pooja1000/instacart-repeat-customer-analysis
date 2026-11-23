@@ -440,6 +440,10 @@ def plot_odds_ratios(odds_ratios, features, title, filename):
     ax.axvline(OR_HI, color="#a0aec0", linewidth=0.8, linestyle=":")
     ax.set_xlabel("Odds ratio (standardised, 95% CI)")
     ax.set_title(title)
+    # Figure note explaining dotted reference lines
+    ax.text(0.5, -0.12,
+            f"Solid line at 1.0 = no association. Dotted lines at {OR_LO} and {OR_HI} mark the minimum meaningful effect threshold (config.yaml).",
+            transform=ax.transAxes, fontsize=8, ha="center", style="italic", color="#4a5568")
     ax.invert_yaxis()
     plt.tight_layout()
     plt.savefig(os.path.join(FIGURES_DIR, filename), dpi=150,
@@ -508,7 +512,7 @@ for thresh in [6, 7, 8]:
 d2 = df["days_to_second_order"].dropna()
 pctiles = [10, 25, 40, 45, 50, 60, 70, 75, 80, 90]
 pctl_vals = {f"p{p}": round(float(np.percentile(d2, p)), 1) for p in pctiles}
-trigger_days = [7, 10, 11, 13, 14, 15, 20, 21, 28]
+trigger_days = [3, 7, 10, 11, 13, 14, 15, 16, 20, 21, 28]
 n_after_days = {f"day_{d}": int((d2 > d).sum()) for d in trigger_days}
 pct_after_days = {f"day_{d}": round(float((d2 > d).mean() * 100), 1) for d in trigger_days}
 

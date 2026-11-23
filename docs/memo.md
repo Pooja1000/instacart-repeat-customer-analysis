@@ -2,7 +2,7 @@
 
 ## Bottom Line
 
-- **Early pacing separates future heavy users far more than basket composition**: A model using early basket and timing features achieves a cross-validated AUC of 0.57, while adding early inter-order gaps raises AUC to 0.76.
+- **Early pacing separates future heavy users far more than basket composition**: A model using early basket and time-of-day features achieves a cross-validated AUC of 0.57, while adding early inter-order gaps raises AUC to 0.76.
 - **Circularity caveat**: Part of the gap link is built into how "heavy" is defined. Cumulative order count is mechanically linked to order cadence, assuming comparable observation windows.
 - **Recommended next step**: It is unknown whether customer pace can be influenced. The highest-leverage next step is to run A/B test designs targeting second-order timing to test whether pacing can be accelerated.
 
@@ -31,11 +31,11 @@ Features were computed exclusively from each customer's first 3 orders; outcomes
 
 ---
 
-## Findings: Lead Model (Early Basket & Timing Features)
+## Findings: Lead Model (Early Basket & Time-of-Day Features)
 
-Leading with the no-gap model, early basket composition and timing features achieve a cross-validated AUC of **0.568**.
+Leading with the no-gap model, early basket composition and time-of-day features achieve a cross-validated AUC of **0.568**.
 
-**Plain-English takeaway**: Basket-composition and breadth effects are **negligible to small**. Every basket feature has a Cohen's d < 0.20 (negligible by standard conventions), and odds ratios are modest (1.03–1.14). While statistically detectable due to the large sample size (N = 206,209), early basket mix alone offers limited ability to discriminate future heavy users.
+**Plain-English takeaway**: Basket-composition and breadth effects are **negligible to small**. Every basket feature has a Cohen's d < 0.20 (negligible by standard conventions), and odds ratios are modest (0.96–1.14). While statistically detectable due to the large sample size (N = 206,209), early basket mix alone offers limited ability to discriminate future heavy users.
 
 | Feature | Odds Ratio (std) | 95% CI | Univariate Cohen's d | Effect Magnitude |
 |---|---|---|---|---|

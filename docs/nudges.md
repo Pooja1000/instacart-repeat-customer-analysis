@@ -12,7 +12,7 @@ Our empirical analysis revealed three key findings:
 1. **Pacing separates heavy from non-heavy customers**: Early return cadence shows a
    medium association with long-term volume (|d| about 0.72–0.76; odds ratios 0.51–0.55),
    whereas early basket composition effects are negligible to small (|d| < 0.20;
-   odds ratios 1.03–1.14).
+   odds ratios 0.96–1.14).
 2. **Second-order timing is the earliest point where a test could intervene**:
    Because early inter-order timing is strongly associated with long-term order volume,
    intervening between order 1 and order 2 represents the earliest actionable window
@@ -30,20 +30,23 @@ days since order 1), rather than post-hoc segmentations that require order-3 dat
 
 ## Empirical Distribution of Days to Second Order (N = 206,209)
 
-The table below shows key percentiles of `days_to_second_order` in the dataset, along with the volume of customers in this data who had not yet placed their second order by each trigger day.
+The table below shows key percentiles of `days_to_second_order` in the dataset, along with the volume of customers in this data who placed their second order after each trigger day.
 
 | Percentile / Trigger Day | Days to Second Order | Customers in Data Placing Order 2 After Day X | % of Cohort Placing Order 2 After Day X | Empirical Role & Trigger Grounding |
 |---|---|---|---|---|
-| 10th percentile | 3.0 days | 184,874 | 89.7% | Rapid initial reorder |
+| 10th percentile (trigger day 3) | 3.0 days | 184,874 | 89.7% | Rapid initial reorder |
 | 25th percentile (trigger day 7) | 7.0 days | 139,036 | 67.4% | Typical fast-cadence threshold |
 | **45th percentile (trigger day 11)** | **11.0 days** | **110,240** | **53.5%** | **Nudge 1 Trigger** (pantry staple replenishment window) |
 | **50th percentile (median, trigger day 13)** | **13.0 days** | **98,936** | **48.0%** | **Nudge 2 Trigger** (median return cadence milestone) |
 | 55th percentile (trigger day 14) | 14.0 days | 91,256 | 44.3% | Two-week post-purchase mark |
-| 60th percentile (trigger day 16) | 16.0 days | 82,904 | 40.2% | Extended return window |
+| 60th percentile (trigger day 16) | 16.0 days | 82,246 | 39.9% | Extended return window |
 | 75th percentile (trigger day 28) | 28.0 days | 49,825 | 24.2% | Delayed return tail |
-| Right-censored cap (day 30) | 30.0 days | 0 | 0.0% | Maximum recorded value |
 
 > **Selection Effect Note (Descriptive)**: This distribution is descriptive and reflects only customers who placed at least 4 orders in the dataset. Customers who placed fewer than 4 orders are not in this data. In a live production environment, true one-time dropouts will shift these distributions and lower baseline conversion rates.
+>
+> **Right-Censoring Note**: `days_since_prior_order` is capped at 30 days in this dataset, meaning any customer with an actual gap longer than 30 days is recorded as 30; all such customers fall inside the day-28 count.
+>
+> **Volume & Budget Note**: The day-11 trigger (53.5% of cohort) and day-13 trigger (48.0% of cohort) reach about half of all retained customers in this data. Because eligible volume is substantial, financial incentive costs (e.g. $0 delivery in Nudge 2) must scale with targeting volume and be gated strictly by the unit-economic guardrail.
 
 ---
 
