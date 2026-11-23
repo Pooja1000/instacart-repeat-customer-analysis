@@ -161,9 +161,9 @@ If the same features rank similarly across thresholds, findings are robust.
 | 3 | `reorder_rate_2_3` | orders 2–3 | Share of items in orders 2–3 that are reorders |
 | 4 | `days_to_second_order` | orders 1→2 gap | days_since_prior_order for order 2 |
 | 5 | `days_to_third_order` | orders 2→3 gap | days_since_prior_order for order 3 |
-| 6 | `weekend_share_1_3` | orders 1–3 | Share of orders 1–3 placed on a weekend day |
-| 7 | `morning_share_1_3` | orders 1–3 | Share of orders 1–3 placed in morning hours |
-| 8 | `evening_share_1_3` | orders 1–3 | Share of orders 1–3 placed in evening hours |
+| 6 | `busiest_days_share_1_3` | orders 1–3 | Share of orders 1–3 placed on days 0–1 (the two busiest days; day labels are undocumented) |
+| 7 | `morning_share_1_3` | orders 1–3 | Share of orders 1–3 placed in morning hours (6–11, set in config) |
+| 8 | `evening_share_1_3` | orders 1–3 | Share of orders 1–3 placed in evening hours (17–22, set in config) |
 | 9 | `pct_produce_order1` | order 1 basket | % of first-order items from Produce dept |
 | 10 | `pct_dairy_order1` | order 1 basket | % of first-order items from Dairy Eggs dept |
 | 11 | `pct_snacks_order1` | order 1 basket | % of first-order items from Snacks dept |
@@ -172,10 +172,14 @@ If the same features rank similarly across thresholds, findings are robust.
 
 **Notes:**
 - Features 4 and 5 are affected by the 30-day cap. We document this but keep
-  them because the cap affects both heavy and non-heavy users.
-- Features 6–8 use day-of-week values 0–6 from `order_dow`. We assume 0 = Saturday,
-  1 = Sunday based on known Instacart shopping patterns, but this is unconfirmed
-  and documented as an assumption.
+  them because the cap affects both heavy and non-heavy users. The logistic
+  regression is run both with and without these gap features (see §6.2).
+- Feature 6 uses `order_dow` values 0–1, which are the two busiest shopping
+  days in the data. Day-of-week labels are undocumented by Instacart; we do
+  **not** assume which day is Saturday or Sunday.
+- All differences are judged against a **minimum meaningful effect size**
+  (Cohen's d ≥ 0.1 for continuous features, OR outside [0.9, 1.1] for odds
+  ratios) set in `config.yaml`, not only statistical significance.
 
 ---
 
@@ -189,27 +193,44 @@ For each feature, compare the distribution between heavy and non-heavy users:
 - Cohen's d effect sizes for continuous features.
 - Visualised as a forest-style chart showing differences with CIs.
 
-### 6.2 Logistic Regression
+### 6.2 Logistic Regression (two versions)
 
-An interpretable logistic regression with:
+We fit the logistic regression **twice**:
+
+1. **Without gap features** (`days_to_second_order`, `days_to_third_order`
+   excluded). This is the **lead version** reported in the memo, because
+   early inter-order gaps partly restate the outcome (users who come back
+   quickly early on also tend to have more total orders — the gap is almost a
+   proxy for the thing we are trying to explain).
+2. **With gap features** included. Reported as a secondary model to show how
+   much the gaps add and how they affect the other coefficients.
+
+Both models use:
 - **Standardised features** (z-scored) so coefficients are comparable.
 - **Odds ratios with 95% CIs** from the model.
 - **Multicollinearity check** via Variance Inflation Factors (VIF); if any
   VIF > 5, we document and consider dropping or combining features.
-- **Discrimination:** AUC on the same data (not for prediction — just to
-  gauge how much early behaviour explains).
+- **Discrimination:** **5-fold cross-validated AUC** (not in-sample) to gauge
+  how much early behaviour explains. Presented as descriptive discrimination,
+  not a prediction product.
 - **Calibration:** Hosmer-Lemeshow or calibration plot.
+
+We also report the **overlap between heavy-user and fast-cadence
+classifications** (users who are both, either, or neither) to show how
+correlated the two outcomes are.
 
 This is presented as "which signals matter when considered together," **not**
 as a prediction product.
 
-### 6.3 Reorder-Rate Evolution
+### 6.3 Reorder-Rate Evolution (constant cohort)
 
-Population-level reorder rate (share of items that are reorders) across orders
-1–10. This shows how reordering behaviour changes with order sequence, but we
-label clearly that it is a cross-sectional pattern across users, not a
-within-user causal trajectory (because later orders over-represent heavier
-users due to survivorship).
+Reorder rate (share of items that are reorders) across orders 1–10, computed
+**only for users with at least 10 orders** so the cohort is constant across
+all order positions. This avoids composition bias (later order positions
+otherwise over-represent heavier users).
+
+We label clearly that this is a cross-sectional pattern across users who all
+reached order 10, not a within-user causal trajectory.
 
 ### 6.4 Sensitivity Checks
 
@@ -219,18 +240,26 @@ remain stable.
 
 ---
 
-## 7. Lifecycle Segments
+## 7. Lifecycle Segments (defined at the order-3 decision point)
 
-For nudge targeting, we segment users by engagement level:
+Segments are defined using **only orders 1–3 data** so they can be applied at
+the moment a user completes their third order (a realistic decision point for
+targeting). We do **not** use total orders (which is an outcome).
 
-| Segment | Rule |
-|---------|------|
-| **New** | Total orders ≤ 5 |
-| **Regular** | Total orders ≥ 6 AND median gap ≤ 14 days |
-| **Slowing** | Total orders ≥ 6 AND median gap > 14 days |
+| Segment | Rule (orders 1–3 only) |
+|---------|------------------------|
+| **Small-and-slow** | First-order basket below median AND mean gap (orders 1→2, 2→3) above median |
+| **Small-and-fast** | First-order basket below median AND mean gap at or below median |
+| **Big-and-slow** | First-order basket at or above median AND mean gap above median |
+| **Big-and-fast** | First-order basket at or above median AND mean gap at or below median |
 
-Thresholds are set in `config.yaml`. We report segment sizes and key trait
-differences.
+Medians for the split are computed from the full user population and stored in
+`results.json`. Thresholds are set in `config.yaml` (or derived from data
+when `"median"` is specified).
+
+We report each segment's **later outcomes** (heavy-user rate, median gap in
+orders 4+, total orders) to show which early profiles are associated with
+higher long-term engagement.
 
 ---
 
@@ -268,8 +297,8 @@ A full diagram is in `docs/metrics_tree.md`.
    cadence metrics downward for infrequent users.
 7. **Single retailer, single period:** Findings may not generalise to other
    grocers or time periods.
-8. **Weekend day labels unconfirmed:** We assume 0 = Saturday, 1 = Sunday but
-   this is not documented by Instacart.
+8. **Day-of-week labels undocumented:** `order_dow` values 0–6 have no
+   confirmed day names. We describe 0–1 only as "the two busiest days."
 
 ---
 
