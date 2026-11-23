@@ -293,11 +293,13 @@ A full diagram is in `docs/metrics_tree.md`.
    channel.
 5. **Descriptive only:** All associations are observational. We cannot say
    that any behaviour *causes* higher retention.
-6. **days_since_prior_order capped at 30:** Long gaps are censored, biasing
-   cadence metrics downward for infrequent users.
-7. **Single retailer, single period:** Findings may not generalise to other
+6. **days_since_prior_order capped at 30:** Long gaps are censored at 30 days
+   (a 19.2× spike at 30 vs 29 days), biasing cadence metrics downward for infrequent users.
+7. **Total orders capped at 100:** User order count is artificially right-censored
+   at 100 orders, compressing the extreme upper tail of power users.
+8. **Single retailer, single period:** Findings may not generalise to other
    grocers or time periods.
-8. **Day-of-week labels undocumented:** `order_dow` values 0–6 have no
+9. **Day-of-week labels undocumented:** `order_dow` values 0–6 have no
    confirmed day names. We describe 0–1 only as "the two busiest days."
 
 ---

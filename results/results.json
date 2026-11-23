@@ -162,32 +162,34 @@
       "first_order_size": {
         "heavy_mean": 10.7744,
         "heavy_ci": [
-          10.7094,
-          10.8381
+          10.7093,
+          10.8396
         ],
         "non_heavy_mean": 9.8307,
         "non_heavy_ci": [
-          9.7941,
-          9.8674
+          9.7919,
+          9.8673
         ],
         "difference": 0.9437,
         "cohens_d": 0.1266,
-        "practically_meaningful": true
+        "effect_size_label": "negligible",
+        "practically_meaningful": false
       },
       "avg_basket_size_1_3": {
         "heavy_mean": 10.5573,
         "heavy_ci": [
-          10.5032,
-          10.6112
+          10.5017,
+          10.6116
         ],
         "non_heavy_mean": 9.7826,
         "non_heavy_ci": [
-          9.7522,
-          9.8143
+          9.7503,
+          9.8142
         ],
         "difference": 0.7747,
         "cohens_d": 0.1222,
-        "practically_meaningful": true
+        "effect_size_label": "negligible",
+        "practically_meaningful": false
       },
       "reorder_rate_2_3": {
         "heavy_mean": 0.3465,
@@ -197,12 +199,45 @@
         ],
         "non_heavy_mean": 0.3275,
         "non_heavy_ci": [
-          0.3264,
+          0.3263,
           0.3286
         ],
         "difference": 0.019,
         "cohens_d": 0.0858,
+        "effect_size_label": "negligible",
         "practically_meaningful": false
+      },
+      "days_to_second_order": {
+        "heavy_mean": 10.1027,
+        "heavy_ci": [
+          10.036,
+          10.1696
+        ],
+        "non_heavy_mean": 17.1977,
+        "non_heavy_ci": [
+          17.1449,
+          17.2497
+        ],
+        "difference": -7.095,
+        "cohens_d": -0.7239,
+        "effect_size_label": "medium",
+        "practically_meaningful": true
+      },
+      "days_to_third_order": {
+        "heavy_mean": 9.8259,
+        "heavy_ci": [
+          9.7604,
+          9.8907
+        ],
+        "non_heavy_mean": 17.2211,
+        "non_heavy_ci": [
+          17.1684,
+          17.2714
+        ],
+        "difference": -7.3952,
+        "cohens_d": -0.7598,
+        "effect_size_label": "medium",
+        "practically_meaningful": true
       },
       "busiest_days_share_1_3": {
         "heavy_mean": 0.3513,
@@ -217,12 +252,13 @@
         ],
         "difference": -0.0057,
         "cohens_d": -0.019,
+        "effect_size_label": "negligible",
         "practically_meaningful": false
       },
       "morning_share_1_3": {
         "heavy_mean": 0.3358,
         "heavy_ci": [
-          0.3333,
+          0.3332,
           0.3384
         ],
         "non_heavy_mean": 0.2991,
@@ -232,7 +268,8 @@
         ],
         "difference": 0.0367,
         "cohens_d": 0.1206,
-        "practically_meaningful": true
+        "effect_size_label": "negligible",
+        "practically_meaningful": false
       },
       "evening_share_1_3": {
         "heavy_mean": 0.2342,
@@ -243,10 +280,11 @@
         "non_heavy_mean": 0.2497,
         "non_heavy_ci": [
           0.2483,
-          0.2512
+          0.2511
         ],
         "difference": -0.0156,
         "cohens_d": -0.055,
+        "effect_size_label": "negligible",
         "practically_meaningful": false
       },
       "pct_produce_order1": {
@@ -262,13 +300,14 @@
         ],
         "difference": 0.0227,
         "cohens_d": 0.0903,
+        "effect_size_label": "negligible",
         "practically_meaningful": false
       },
       "pct_dairy_order1": {
         "heavy_mean": 0.17,
         "heavy_ci": [
           0.1685,
-          0.1716
+          0.1715
         ],
         "non_heavy_mean": 0.1541,
         "non_heavy_ci": [
@@ -277,13 +316,14 @@
         ],
         "difference": 0.016,
         "cohens_d": 0.0894,
+        "effect_size_label": "negligible",
         "practically_meaningful": false
       },
       "pct_snacks_order1": {
         "heavy_mean": 0.0907,
         "heavy_ci": [
           0.0894,
-          0.0919
+          0.092
         ],
         "non_heavy_mean": 0.0868,
         "non_heavy_ci": [
@@ -292,104 +332,70 @@
         ],
         "difference": 0.0039,
         "cohens_d": 0.025,
+        "effect_size_label": "negligible",
         "practically_meaningful": false
       },
       "n_departments_order1": {
         "heavy_mean": 4.9214,
         "heavy_ci": [
-          4.9001,
-          4.9428
+          4.9002,
+          4.9437
         ],
         "non_heavy_mean": 4.7159,
         "non_heavy_ci": [
-          4.7032,
-          4.7291
+          4.7025,
+          4.7287
         ],
         "difference": 0.2056,
         "cohens_d": 0.08,
+        "effect_size_label": "negligible",
         "practically_meaningful": false
       },
       "n_aisles_order1": {
         "heavy_mean": 7.6413,
         "heavy_ci": [
-          7.6008,
-          7.6811
+          7.6005,
+          7.6819
         ],
         "non_heavy_mean": 7.155,
         "non_heavy_ci": [
-          7.1315,
-          7.1793
+          7.1301,
+          7.1786
         ],
         "difference": 0.4863,
         "cohens_d": 0.102,
-        "practically_meaningful": true
-      },
-      "days_to_second_order": {
-        "heavy_mean": 10.1027,
-        "heavy_ci": [
-          10.0352,
-          10.1707
-        ],
-        "non_heavy_mean": 17.1977,
-        "non_heavy_ci": [
-          17.1453,
-          17.2504
-        ],
-        "difference": -7.095,
-        "cohens_d": -0.7239,
-        "practically_meaningful": true
-      },
-      "days_to_third_order": {
-        "heavy_mean": 9.8259,
-        "heavy_ci": [
-          9.7609,
-          9.8905
-        ],
-        "non_heavy_mean": 17.2211,
-        "non_heavy_ci": [
-          17.1693,
-          17.2722
-        ],
-        "difference": -7.3952,
-        "cohens_d": -0.7598,
-        "practically_meaningful": true
+        "effect_size_label": "negligible",
+        "practically_meaningful": false
       }
     },
     "logistic_regression": {
       "without_gap_features": {
         "odds_ratios": {
-          "first_order_size": {
-            "odds_ratio": 1.0999,
-            "ci_lower": 1.0662,
-            "ci_upper": 1.1347,
-            "p_value": 0.0,
-            "practically_meaningful": false
-          },
           "avg_basket_size_1_3": {
-            "odds_ratio": 1.0714,
-            "ci_lower": 1.0516,
-            "ci_upper": 1.0917,
+            "odds_ratio": 1.0954,
+            "ci_lower": 1.0799,
+            "ci_upper": 1.1112,
             "p_value": 0.0,
             "practically_meaningful": false
           },
           "reorder_rate_2_3": {
-            "odds_ratio": 1.0574,
-            "ci_lower": 1.0466,
-            "ci_upper": 1.0683,
+            "odds_ratio": 1.0613,
+            "ci_lower": 1.0507,
+            "ci_upper": 1.072,
             "p_value": 0.0,
             "practically_meaningful": false
           },
           "busiest_days_share_1_3": {
-            "odds_ratio": 0.9631,
-            "ci_lower": 0.9536,
-            "ci_upper": 0.9728,
+            "odds_ratio": 0.9625,
+            "ci_lower": 0.953,
+            "ci_upper": 0.9721,
             "p_value": 0.0,
             "practically_meaningful": false
           },
           "morning_share_1_3": {
-            "odds_ratio": 1.1201,
-            "ci_lower": 1.108,
-            "ci_upper": 1.1324,
+            "odds_ratio": 1.1207,
+            "ci_lower": 1.1085,
+            "ci_upper": 1.133,
             "p_value": 0.0,
             "practically_meaningful": true
           },
@@ -397,61 +403,50 @@
             "odds_ratio": 0.9988,
             "ci_lower": 0.9877,
             "ci_upper": 1.01,
-            "p_value": 0.828941,
+            "p_value": 0.829891,
             "practically_meaningful": false
           },
           "pct_produce_order1": {
-            "odds_ratio": 1.1374,
-            "ci_lower": 1.1246,
-            "ci_upper": 1.1503,
+            "odds_ratio": 1.143,
+            "ci_lower": 1.1304,
+            "ci_upper": 1.1558,
             "p_value": 0.0,
             "practically_meaningful": true
           },
           "pct_dairy_order1": {
-            "odds_ratio": 1.1301,
-            "ci_lower": 1.1184,
-            "ci_upper": 1.1419,
+            "odds_ratio": 1.128,
+            "ci_lower": 1.1164,
+            "ci_upper": 1.1397,
             "p_value": 0.0,
             "practically_meaningful": true
           },
           "pct_snacks_order1": {
-            "odds_ratio": 1.074,
-            "ci_lower": 1.0627,
-            "ci_upper": 1.0854,
+            "odds_ratio": 1.0741,
+            "ci_lower": 1.0629,
+            "ci_upper": 1.0855,
             "p_value": 0.0,
             "practically_meaningful": false
           },
           "n_departments_order1": {
-            "odds_ratio": 1.0619,
-            "ci_lower": 1.0347,
-            "ci_upper": 1.0898,
-            "p_value": 6e-06,
-            "practically_meaningful": false
-          },
-          "n_aisles_order1": {
-            "odds_ratio": 0.908,
-            "ci_lower": 0.8734,
-            "ci_upper": 0.9439,
-            "p_value": 1e-06,
+            "odds_ratio": 1.0352,
+            "ci_lower": 1.0199,
+            "ci_upper": 1.0508,
+            "p_value": 5e-06,
             "practically_meaningful": false
           }
         },
-        "cv_auc_mean": 0.5681,
-        "cv_auc_std": 0.003,
-        "pseudo_r_squared": 0.0098,
+        "cv_auc_mean": 0.5676,
+        "cv_auc_std": 0.002,
+        "pseudo_r_squared": 0.0097,
         "n_obs": 206209,
         "vif": [
           {
-            "feature": "first_order_size",
-            "vif": 10.73
-          },
-          {
             "feature": "avg_basket_size_1_3",
-            "vif": 3.75
+            "vif": 2.22
           },
           {
             "feature": "reorder_rate_2_3",
-            "vif": 1.07
+            "vif": 1.03
           },
           {
             "feature": "busiest_days_share_1_3",
@@ -467,11 +462,11 @@
           },
           {
             "feature": "pct_produce_order1",
-            "vif": 1.25
+            "vif": 1.21
           },
           {
             "feature": "pct_dairy_order1",
-            "vif": 1.11
+            "vif": 1.1
           },
           {
             "feature": "pct_snacks_order1",
@@ -479,34 +474,25 @@
           },
           {
             "feature": "n_departments_order1",
-            "vif": 7.0
-          },
-          {
-            "feature": "n_aisles_order1",
-            "vif": 16.3
+            "vif": 2.27
           }
-        ]
+        ],
+        "max_vif": 2.27,
+        "sign_flips": []
       },
       "with_gap_features": {
         "odds_ratios": {
-          "first_order_size": {
-            "odds_ratio": 1.0032,
-            "ci_lower": 0.9697,
-            "ci_upper": 1.0378,
-            "p_value": 0.854172,
-            "practically_meaningful": false
-          },
           "avg_basket_size_1_3": {
-            "odds_ratio": 1.1593,
-            "ci_lower": 1.1358,
-            "ci_upper": 1.1833,
+            "odds_ratio": 1.1576,
+            "ci_lower": 1.1396,
+            "ci_upper": 1.1759,
             "p_value": 0.0,
             "practically_meaningful": true
           },
           "reorder_rate_2_3": {
-            "odds_ratio": 1.0552,
+            "odds_ratio": 1.0549,
             "ci_lower": 1.0435,
-            "ci_upper": 1.067,
+            "ci_upper": 1.0664,
             "p_value": 0.0,
             "practically_meaningful": false
           },
@@ -514,7 +500,7 @@
             "odds_ratio": 0.9952,
             "ci_lower": 0.9846,
             "ci_upper": 1.006,
-            "p_value": 0.380351,
+            "p_value": 0.381104,
             "practically_meaningful": false
           },
           "morning_share_1_3": {
@@ -528,42 +514,35 @@
             "odds_ratio": 0.9972,
             "ci_lower": 0.9853,
             "ci_upper": 1.0093,
-            "p_value": 0.649777,
+            "p_value": 0.651765,
             "practically_meaningful": false
           },
           "pct_produce_order1": {
-            "odds_ratio": 1.1019,
-            "ci_lower": 1.0884,
-            "ci_upper": 1.1155,
+            "odds_ratio": 1.1017,
+            "ci_lower": 1.0885,
+            "ci_upper": 1.1151,
             "p_value": 0.0,
             "practically_meaningful": true
           },
           "pct_dairy_order1": {
-            "odds_ratio": 1.11,
-            "ci_lower": 1.0975,
-            "ci_upper": 1.1227,
+            "odds_ratio": 1.1096,
+            "ci_lower": 1.0972,
+            "ci_upper": 1.1221,
             "p_value": 0.0,
             "practically_meaningful": true
           },
           "pct_snacks_order1": {
-            "odds_ratio": 1.0729,
-            "ci_lower": 1.0606,
-            "ci_upper": 1.0853,
+            "odds_ratio": 1.0726,
+            "ci_lower": 1.0604,
+            "ci_upper": 1.085,
             "p_value": 0.0,
             "practically_meaningful": false
           },
           "n_departments_order1": {
-            "odds_ratio": 1.002,
-            "ci_lower": 0.9742,
-            "ci_upper": 1.0306,
-            "p_value": 0.888954,
-            "practically_meaningful": false
-          },
-          "n_aisles_order1": {
-            "odds_ratio": 0.989,
-            "ci_lower": 0.9483,
-            "ci_upper": 1.0314,
-            "p_value": 0.604186,
+            "odds_ratio": 0.9955,
+            "ci_lower": 0.9795,
+            "ci_upper": 1.0117,
+            "p_value": 0.583653,
             "practically_meaningful": false
           },
           "days_to_second_order": {
@@ -582,21 +561,17 @@
           }
         },
         "cv_auc_mean": 0.7559,
-        "cv_auc_std": 0.0015,
+        "cv_auc_std": 0.0029,
         "pseudo_r_squared": 0.1434,
         "n_obs": 206209,
         "vif": [
           {
-            "feature": "first_order_size",
-            "vif": 10.74
-          },
-          {
             "feature": "avg_basket_size_1_3",
-            "vif": 3.75
+            "vif": 2.22
           },
           {
             "feature": "reorder_rate_2_3",
-            "vif": 1.07
+            "vif": 1.03
           },
           {
             "feature": "busiest_days_share_1_3",
@@ -612,11 +587,11 @@
           },
           {
             "feature": "pct_produce_order1",
-            "vif": 1.25
+            "vif": 1.21
           },
           {
             "feature": "pct_dairy_order1",
-            "vif": 1.11
+            "vif": 1.1
           },
           {
             "feature": "pct_snacks_order1",
@@ -624,11 +599,7 @@
           },
           {
             "feature": "n_departments_order1",
-            "vif": 7.01
-          },
-          {
-            "feature": "n_aisles_order1",
-            "vif": 16.31
+            "vif": 2.28
           },
           {
             "feature": "days_to_second_order",
@@ -638,7 +609,9 @@
             "feature": "days_to_third_order",
             "vif": 1.17
           }
-        ]
+        ],
+        "max_vif": 2.28,
+        "sign_flips": []
       }
     },
     "heavy_fast_overlap": {
@@ -649,95 +622,112 @@
       "pct_overlap_among_heavy": 58.3,
       "pct_overlap_among_fast": 58.1
     },
+    "fast_cadence_sensitivity": {
+      "threshold_6d": {
+        "threshold_days": 6,
+        "n_fast_cadence": 33839,
+        "both": 20012,
+        "heavy_only": 33919,
+        "fast_only": 13827,
+        "neither": 138451,
+        "pct_heavy_are_fast": 37.1,
+        "pct_fast_are_heavy": 59.1
+      },
+      "threshold_7d": {
+        "threshold_days": 7,
+        "n_fast_cadence": 54086,
+        "both": 31445,
+        "heavy_only": 22486,
+        "fast_only": 22641,
+        "neither": 129637,
+        "pct_heavy_are_fast": 58.3,
+        "pct_fast_are_heavy": 58.1
+      },
+      "threshold_8d": {
+        "threshold_days": 8,
+        "n_fast_cadence": 66840,
+        "both": 37523,
+        "heavy_only": 16408,
+        "fast_only": 29317,
+        "neither": 122961,
+        "pct_heavy_are_fast": 69.6,
+        "pct_fast_are_heavy": 56.1
+      }
+    },
     "sensitivity": {
       "top_30pct": {
         "odds_ratios": {
-          "first_order_size": {
-            "odds_ratio": 1.0711,
-            "ci_lower": 1.0396,
-            "ci_upper": 1.1035
-          },
           "avg_basket_size_1_3": {
-            "odds_ratio": 1.075,
-            "ci_lower": 1.056,
-            "ci_upper": 1.0943
+            "odds_ratio": 1.0867,
+            "ci_lower": 1.0719,
+            "ci_upper": 1.1016
           },
           "reorder_rate_2_3": {
-            "odds_ratio": 1.0612,
-            "ci_lower": 1.051,
-            "ci_upper": 1.0715
+            "odds_ratio": 1.0631,
+            "ci_lower": 1.053,
+            "ci_upper": 1.0731
           },
           "busiest_days_share_1_3": {
-            "odds_ratio": 0.9639,
-            "ci_lower": 0.9548,
-            "ci_upper": 0.9729
+            "odds_ratio": 0.9635,
+            "ci_lower": 0.9545,
+            "ci_upper": 0.9726
           },
           "morning_share_1_3": {
-            "odds_ratio": 1.1093,
-            "ci_lower": 1.0979,
-            "ci_upper": 1.1209
+            "odds_ratio": 1.1097,
+            "ci_lower": 1.0983,
+            "ci_upper": 1.1212
           },
           "evening_share_1_3": {
-            "odds_ratio": 0.9981,
+            "odds_ratio": 0.9982,
             "ci_lower": 0.9877,
             "ci_upper": 1.0087
           },
           "pct_produce_order1": {
-            "odds_ratio": 1.1241,
-            "ci_lower": 1.1122,
-            "ci_upper": 1.1361
+            "odds_ratio": 1.1273,
+            "ci_lower": 1.1156,
+            "ci_upper": 1.1391
           },
           "pct_dairy_order1": {
-            "odds_ratio": 1.1184,
-            "ci_lower": 1.1074,
-            "ci_upper": 1.1294
+            "odds_ratio": 1.116,
+            "ci_lower": 1.1052,
+            "ci_upper": 1.127
           },
           "pct_snacks_order1": {
-            "odds_ratio": 1.0739,
-            "ci_lower": 1.0633,
-            "ci_upper": 1.0846
+            "odds_ratio": 1.0735,
+            "ci_lower": 1.0629,
+            "ci_upper": 1.0841
           },
           "n_departments_order1": {
-            "odds_ratio": 1.0661,
-            "ci_lower": 1.0402,
-            "ci_upper": 1.0926
-          },
-          "n_aisles_order1": {
-            "odds_ratio": 0.9165,
-            "ci_lower": 0.8833,
-            "ci_upper": 0.951
+            "odds_ratio": 1.0336,
+            "ci_lower": 1.0192,
+            "ci_upper": 1.0483
           }
         },
-        "cv_auc_mean": 0.563,
+        "cv_auc_mean": 0.5627,
         "n_heavy": 65296,
         "n_total": 206209
       },
       "top_20pct": {
         "odds_ratios": {
-          "first_order_size": {
-            "odds_ratio": 1.1253,
-            "ci_lower": 1.0884,
-            "ci_upper": 1.1634
-          },
           "avg_basket_size_1_3": {
-            "odds_ratio": 1.0712,
-            "ci_lower": 1.0498,
-            "ci_upper": 1.093
+            "odds_ratio": 1.1022,
+            "ci_lower": 1.0854,
+            "ci_upper": 1.1193
           },
           "reorder_rate_2_3": {
-            "odds_ratio": 1.0513,
-            "ci_lower": 1.0397,
-            "ci_upper": 1.0631
+            "odds_ratio": 1.0564,
+            "ci_lower": 1.0449,
+            "ci_upper": 1.0679
           },
           "busiest_days_share_1_3": {
-            "odds_ratio": 0.9548,
-            "ci_lower": 0.9445,
-            "ci_upper": 0.9652
+            "odds_ratio": 0.954,
+            "ci_lower": 0.9438,
+            "ci_upper": 0.9644
           },
           "morning_share_1_3": {
-            "odds_ratio": 1.1317,
-            "ci_lower": 1.1185,
-            "ci_upper": 1.1452
+            "odds_ratio": 1.1325,
+            "ci_lower": 1.1192,
+            "ci_upper": 1.1459
           },
           "evening_share_1_3": {
             "odds_ratio": 0.9967,
@@ -745,59 +735,32 @@
             "ci_upper": 1.009
           },
           "pct_produce_order1": {
-            "odds_ratio": 1.1542,
-            "ci_lower": 1.14,
-            "ci_upper": 1.1686
+            "odds_ratio": 1.1616,
+            "ci_lower": 1.1476,
+            "ci_upper": 1.1758
           },
           "pct_dairy_order1": {
-            "odds_ratio": 1.1467,
-            "ci_lower": 1.1338,
-            "ci_upper": 1.1597
+            "odds_ratio": 1.1443,
+            "ci_lower": 1.1316,
+            "ci_upper": 1.1572
           },
           "pct_snacks_order1": {
-            "odds_ratio": 1.0783,
-            "ci_lower": 1.0659,
-            "ci_upper": 1.0908
+            "odds_ratio": 1.0786,
+            "ci_lower": 1.0663,
+            "ci_upper": 1.091
           },
           "n_departments_order1": {
-            "odds_ratio": 1.0695,
-            "ci_lower": 1.0397,
-            "ci_upper": 1.1
-          },
-          "n_aisles_order1": {
-            "odds_ratio": 0.8892,
-            "ci_lower": 0.8529,
-            "ci_upper": 0.9271
+            "odds_ratio": 1.0379,
+            "ci_lower": 1.0212,
+            "ci_upper": 1.0548
           }
         },
-        "cv_auc_mean": 0.5739,
+        "cv_auc_mean": 0.5731,
         "n_heavy": 42499,
         "n_total": 206209
       }
     },
     "lifecycle_segments": {
-      "small-and-fast": {
-        "n_users": 44411,
-        "pct_of_total": 21.5,
-        "avg_total_orders": 21.6,
-        "median_total_orders": 15.0,
-        "avg_median_gap": 11.4,
-        "pct_heavy": 38.4,
-        "pct_fast_cadence": 41.5,
-        "avg_first_order_size": 4.3,
-        "avg_reorder_rate": 0.317
-      },
-      "big-and-fast": {
-        "n_users": 59334,
-        "pct_of_total": 28.8,
-        "avg_total_orders": 23.2,
-        "median_total_orders": 16.0,
-        "avg_median_gap": 11.2,
-        "pct_heavy": 42.8,
-        "pct_fast_cadence": 41.0,
-        "avg_first_order_size": 14.9,
-        "avg_reorder_rate": 0.365
-      },
       "big-and-slow": {
         "n_users": 55132,
         "pct_of_total": 26.7,
@@ -819,6 +782,28 @@
         "pct_fast_cadence": 11.7,
         "avg_first_order_size": 4.0,
         "avg_reorder_rate": 0.297
+      },
+      "small-and-fast": {
+        "n_users": 44411,
+        "pct_of_total": 21.5,
+        "avg_total_orders": 21.6,
+        "median_total_orders": 15.0,
+        "avg_median_gap": 11.4,
+        "pct_heavy": 38.4,
+        "pct_fast_cadence": 41.5,
+        "avg_first_order_size": 4.3,
+        "avg_reorder_rate": 0.317
+      },
+      "big-and-fast": {
+        "n_users": 59334,
+        "pct_of_total": 28.8,
+        "avg_total_orders": 23.2,
+        "median_total_orders": 16.0,
+        "avg_median_gap": 11.2,
+        "pct_heavy": 42.8,
+        "pct_fast_cadence": 41.0,
+        "avg_first_order_size": 14.9,
+        "avg_reorder_rate": 0.365
       }
     },
     "reorder_curve": {
@@ -833,6 +818,10 @@
       "9": 0.6242,
       "10": 0.6366
     },
-    "reorder_curve_cohort_size": 101696
+    "reorder_curve_cohort_size": 101696,
+    "effect_size_summary": {
+      "basket_composition_magnitude": "small (Cohen's d < 0.20; ORs 1.03\u20131.14)",
+      "timing_cadence_magnitude": "medium-to-large (Cohen's d ~ 0.72\u20130.76; ORs ~ 0.51\u20130.55)"
+    }
   }
 }

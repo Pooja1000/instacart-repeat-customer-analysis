@@ -1,4 +1,4 @@
-﻿# run.ps1 - PowerShell equivalent of `make run`
+# run.ps1 - PowerShell equivalent of `make run`
 # Runs tests, SQL pipeline, analysis, and document generation.
 
 $ErrorActionPreference = "Stop"

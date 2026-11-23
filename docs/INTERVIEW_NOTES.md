@@ -116,15 +116,35 @@ cause more repeat purchases?"*
 
 ---
 
-## 8. Effect Size Thresholds
+## 8. Effect Size Thresholds & Why Basket Composition Effects Are Small
 
 **Explanation:** With 206,000+ users, almost any difference — no matter how
-tiny — will be statistically significant. A p-value tells us whether we'd see
-a difference this large by chance, but it does not tell us whether the
-difference matters in practice. We set a minimum meaningful effect size
-(Cohen's d ≥ 0.1 for means, odds ratios outside [0.9, 1.1]) and judge each
-finding against it. Features that are statistically significant but fall below
-the threshold are reported as "not practically meaningful."
+tiny — will achieve statistical significance ($p < 0.001$). A p-value tells us
+whether we would see a difference this large by chance, but it does not tell us
+whether the difference matters in practice. We evaluate continuous features using
+standard Cohen's d brackets: negligible ($<0.2$), small ($0.2$–$0.5$), medium
+($0.5$–$0.8$), and large ($\ge 0.8$). In our analysis, all early basket composition
+and breadth features (department mix, average items) fall into the negligible/small
+range ($d < 0.20$; odds ratios $1.03$–$1.14$), whereas early return cadence exhibits
+a medium-to-large association ($|d| \approx 0.72$–$0.76$; odds ratios $\approx 0.51$–$0.55$).
+This proves that basket mix is a modest early signal compared to customer pacing.
 
 **Likely interview question:** *"You have 200K+ users — isn't everything
-significant?"*
+statistically significant? How do you assess practical business impact?"*
+
+---
+
+## 9. Data Truncation & Censoring (Orders Capped at 100, Gaps Capped at 30)
+
+**Explanation:** The Instacart dataset exhibits two deliberate boundary truncations:
+total orders per user is capped at exactly 100, and inter-order gaps (`days_since_prior_order`)
+are capped at 30 days (evidenced by a 19.2× spike at 30 vs 29 days). The 100-order cap
+truncates the extreme right tail of super-heavy users, meaning heavy-user thresholds
+capture customers with $\ge 20$ orders but compress the distinction between moderate
+regulars (e.g. 30 orders) and power users (e.g. 150+ true orders). The 30-day cap
+censors long customer churn gaps, compressing the slow tail and making slow users
+appear faster than they truly were. However, our primary thresholds (top quartile heavy
+status at 20 orders, fast cadence at 7 days) sit comfortably below these caps.
+
+**Likely interview question:** *"Did you notice any artificial censoring or
+capping in the data, and how did it affect your metrics?"*

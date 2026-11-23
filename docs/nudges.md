@@ -1,110 +1,134 @@
-# Nudge Proposals: Experiment Designs to Increase Repeat Ordering
+# Nudge Proposals: A/B Experiment Designs to Increase Repeat Ordering
 
-> These are **test designs**, not results. We propose experiments based on
-> observed associations. No impact is claimed until an experiment is run.
-
----
-
-## Nudge 1: "Complete Your Basket" Prompt for Small First Orders
-
-### Grounding
-
-Users whose first order contains more items and spans more departments are
-associated with higher odds of becoming heavy users (see `results.json`
-for exact odds ratios and CIs). This association may reflect that broader
-first baskets help users experience enough of the platform to build a habit,
-or it may simply reflect that committed users shop more from the start.
-An experiment can test whether a prompt to add items changes behaviour.
-
-### Design
-
-| Element | Detail |
-|---------|--------|
-| **Target segment** | `small-and-slow` and `small-and-fast` (first basket below the median of 8 items) |
-| **Hypothesis** | Prompting users with small initial carts to explore complementary staples will increase early basket breadth and engagement, associating with higher repeat order frequency over 90 days. |
-| **Trigger** | User has ≤ 5 items in cart and begins checkout on their first order |
-| **Treatment** | Show a "Round out your basket?" interstitial with popular items from departments not yet in the cart (produce, dairy, snacks) |
-| **Control** | Standard checkout flow |
-| **Unit of randomisation** | User (randomised at account creation) |
-| **Primary metric** | Number of orders placed in the 90 days following the first order |
-| **Guardrail metrics** | (1) First-order completion rate (must not drop — the prompt should not cause cart abandonment); (2) Average basket size in orders 2–5 (prompt should not simply shift items from future orders into the first) |
-| **Minimum detectable effect** | +5% relative lift in 90-day order count. With a baseline of ~10 orders per user over the observation period, this is 0.5 additional orders. |
-| **Sample size (rough)** | ~20,000 per arm (α = 0.05 two-sided, power = 0.80, estimated from the observed variance in total orders). Adjust with actual conversion data. |
-| **Duration** | 4–6 weeks of enrolment + 90-day observation window |
-| **Stop criteria** | Stop if first-order completion rate drops > 2 percentage points (guardrail violation). |
+> **Status:** Test designs only. These are prospective experiment designs grounded
+> in observed descriptive associations. They do not claim any causal impact
+> prior to empirical testing.
 
 ---
 
-## Nudge 2: Reorder Reminder Timed to the User's Observed Gap
+## Strategic Context
 
-### Grounding
+Our empirical analysis revealed three key structural realities among repeat customers:
+1. **Cadence is the primary differentiator**: Early inter-order gap is the single
+   strongest signal separating heavy from non-heavy customers ($d \approx -0.72$ to $-0.76$;
+   odds ratios $\approx 0.51$–$0.55$).
+2. **Basket composition effects are small**: Early department mix and basket breadth
+   have small individual associations ($|d| < 0.20$; odds ratios $\approx 1.03$–$1.14$).
+3. **The second order is the critical juncture**: The sharpest hazard of drop-off
+   occurs between order 1 and order 2, whereas reorder rate accelerates rapidly
+   from order 2 onward ($28.2\%$ at order 2 to $40.3\%$ at order 3).
 
-Users who return for their second order quickly tend to become heavier users
-(as shown in the with-gap-features regression model). The median gap between
-orders 1 and 2 is about 15 days for non-heavy users vs shorter for heavy users.
-A well-timed reminder might pull some users back before the habit window closes.
-
-### Design
-
-| Element | Detail |
-|---------|--------|
-| **Target segment** | All users after their first order |
-| **Hypothesis** | Delivering a personalized reorder reminder at the expected reorder interval will reduce friction for the second order, shortening the inter-order gap and increasing 90-day order retention. |
-| **Trigger** | User has not placed a second order N days after their first (N = user's observed gap from similar users, default 7 days) |
-| **Treatment** | Push notification or email: "Your [top 3 items from first order] might be running low — reorder with one tap" |
-| **Control** | No reminder (or standard marketing cadence) |
-| **Unit of randomisation** | User |
-| **Primary metric** | Days to second order (survival analysis: time-to-event) |
-| **Secondary metric** | Total orders in 90 days |
-| **Guardrail metrics** | (1) Unsubscribe / notification-disable rate; (2) Basket size of second order (should not shrink — we don't want tiny "just checking in" orders) |
-| **Minimum detectable effect** | 1-day reduction in median gap to second order (from an assumed baseline of ~15 days) |
-| **Sample size (rough)** | ~15,000 per arm (depends on variance of gap; use a log-rank test for the survival analysis) |
-| **Duration** | 3–4 weeks of enrolment + 30-day observation window |
-| **Stop criteria** | Stop if unsubscribe rate exceeds 3% or second-order basket size drops > 10%. |
+Consequently, all proposed interventions **target the second order for slow starters**
+and address pacing and replenishment friction, rather than artificially prompting
+first-basket expansion.
 
 ---
 
-## Nudge 3: "Buy It Again" Shelf Highlighting First-Order Items
+## Nudge 1: Replenishment-Timed Reorder Reminder for "Big-and-Slow" Customers
 
-### Grounding
+### Background & Grounding
+Users in the `big-and-slow` segment ($26.7\%$ of customers, $n = 55,132$) place
+above-average first baskets ($\ge 8$ items) but exhibit slow early cadence
+($> 14.5$ days between orders). Only $12.2\%$ become heavy users, compared to
+$42.8\%$ of `big-and-fast` customers. Because these users already demonstrated high
+basket willingness, their slow return is more likely due to consumption cycles or
+absence of timely triggers rather than lack of category interest.
 
-Reorder rate rises steeply from order 1 (0%) to order 3 (~40%) among users
-who persist (constant-cohort reorder curve). Users who reorder more of their
-previous items in orders 2–3 show a small positive association with heavy-user
-status. Making it easier to reorder first-order items in subsequent visits may
-accelerate habit formation.
+### Hypothesis
+**Hypothesis (to be tested):** Delivering a personalized replenishment notification
+anchored to the perishable staples in a customer's large first order (timed to
+typical household depletion at days 10–12) will pull forward the timing of order 2
+and increase 60-day repeat order conversion without cannibalizing order size.
 
-### Design
+### Experiment Design
 
-| Element | Detail |
-|---------|--------|
-| **Target segment** | All users on their 2nd or 3rd visit |
-| **Hypothesis** | Reducing search friction for previously purchased items through an upfront "Buy It Again" carousel will increase early reorder rate and accelerate repeat shopping habits. |
-| **Trigger** | User opens the app/site for order 2 or 3 |
-| **Treatment** | A prominent "Buy it again" carousel at the top of the homepage showing all items from the user's most recent order, with one-tap add-to-cart |
-| **Control** | Standard homepage (which may already have recommendation carousels, but not specifically anchored to the user's prior order) |
-| **Unit of randomisation** | User |
-| **Primary metric** | Reorder rate in orders 2–3 (share of items that are reorders) |
-| **Secondary metric** | Total orders in 90 days |
-| **Guardrail metrics** | (1) Total basket size (the "buy it again" shelf should supplement, not replace, browsing — basket size should not drop); (2) Product diversity (number of distinct products per order — the shelf should not lock users into a narrow set) |
-| **Minimum detectable effect** | +3 percentage points in reorder rate (from a baseline of ~28% at order 2) |
-| **Sample size (rough)** | ~10,000 per arm (proportion test, α = 0.05, power = 0.80) |
-| **Duration** | 3–4 weeks of enrolment + observation through order 3 |
-| **Stop criteria** | Stop if basket size drops > 5% or product diversity drops > 10%. |
+| Design Element | Specification |
+|---|---|
+| **Target Segment** | `big-and-slow` users (first basket $\ge 8$ items, no second order placed by day 10). |
+| **Trigger** | Day 11 following delivery of order 1 if no second order has been initiated. |
+| **Treatment** | Push notification / email: *"Running low on [Product 1] and [Product 2]? Tap to add your staples back to your cart."* Deep-links directly to a pre-filled cart. |
+| **Control** | Standard marketing communications (business-as-usual; no personalized replenishment prompt). |
+| **Unit of Randomisation** | User (randomised $1:1$ upon delivery of order 1). |
+| **Primary Metric** | Conversion to order 2 within 30 days of order 1 delivery ($\%$). |
+| **Secondary Metric** | Days between order 1 and order 2 (survival analysis / time-to-event). |
+| **Guardrail Metrics** | (1) Average basket size of order 2 (items per order; must not shrink by $>5\%$); (2) Unsubscribe / notification disable rate (must remain $<2\%$). |
+| **Assumed Baseline** | Baseline 30-day second-order conversion in this segment: $\approx 55\%$. Assumed standard deviation of gap: $\approx 8$ days. |
+| **Minimum Detectable Effect (MDE)** | $+3.0$ percentage points in 30-day conversion (from $55\%$ to $58\%$), or $1.5$-day reduction in median gap. |
+| **Sample Size (Rough)** | $\approx 8,500$ users per variant ($\alpha = 0.05$ two-sided, power $80\%$). At current volume, enrolment window $\approx 3$ weeks. |
+| **Duration** | 3 weeks enrolment $+$ 30-day follow-up window. |
+| **Stop Criteria** | Terminate early if notification opt-out / unsubscribe rate exceeds $3.0\%$ or if order 2 basket size decreases by $>10\%$. |
 
 ---
 
-## Notes for All Nudges
+## Nudge 2: Second-Order Re-engagement Incentive for "Small-and-Slow" Starters
 
-- **Descriptive, not causal**: These designs are grounded in observed
-  associations. The experiment is what determines whether the nudge actually
-  works.
-- **Sample sizes are rough**: They assume normally distributed metrics and
-  two-sided tests. Actual power calculations should use the observed variance
-  from the specific metric and account for clustering if applicable.
-- **Sequential testing**: For production, consider a sequential testing
-  framework (e.g., group sequential design or always-valid p-values) to
-  enable early stopping for both futility and harm.
-- **Interaction effects**: If multiple nudges are run simultaneously, use a
-  factorial design or run them on non-overlapping user segments to avoid
-  confounding.
+### Background & Grounding
+Customers in the `small-and-slow` segment ($23.0\%$ of users, $n = 47,332$) start with
+below-median initial baskets ($<8$ items) and extended inter-order gaps ($>14.5$ days).
+Only $10.1\%$ become heavy users, averaging just $10.2$ total orders. These users have
+the lowest retention on the platform and face high attrition risk immediately after order 1.
+
+### Hypothesis
+**Hypothesis (to be tested):** Offering a targeted, time-limited delivery incentive
+for the second order before typical drop-off (at day 10) will lower the perceived
+friction of a second trial, lifting second-order conversion and preventing early churn.
+
+### Experiment Design
+
+| Design Element | Specification |
+|---|---|
+| **Target Segment** | `small-and-slow` users (first basket $< 8$ items, no second order placed by day 10). |
+| **Trigger** | Day 10 post-order 1 delivery if no active cart or order exists. |
+| **Treatment** | In-app message and email: *"$0 Delivery on your next order — expires in 5 days."* |
+| **Control** | Standard transactional communications without special second-order delivery subsidy. |
+| **Unit of Randomisation** | User (randomised $1:1$ upon order 1 completion). |
+| **Primary Metric** | Conversion to order 2 within 21 days of trigger ($\%$). |
+| **Secondary Metric** | Total orders placed within 90 days. |
+| **Guardrail Metrics** | (1) Net contribution margin per acquired user (repeat gross profit minus subsidy cost); (2) Basket size of order 2 (must not drop below 5 items). |
+| **Assumed Baseline** | Baseline second-order conversion at day 10 without incentive: $\approx 40\%$. |
+| **Minimum Detectable Effect (MDE)** | $+4.0$ percentage points in conversion (from $40\%$ to $44\%$). |
+| **Sample Size (Rough)** | $\approx 5,000$ users per variant ($\alpha = 0.05$ two-sided, power $80\%$). Enrolment window $\approx 2$ weeks. |
+| **Duration** | 2 weeks enrolment $+$ 30-day post-trigger observation. |
+| **Stop Criteria** | Stop if net contribution margin per user is negative after accounting for subsequent repeat ordering (futility/cost guardrail). |
+
+---
+
+## Nudge 3: "Reorder Your Favorites in 1 Click" Quick-Cart Drawer for Order 2
+
+### Background & Grounding
+Empirical reorder rates accelerate from $0\%$ at order 1 to $28.2\%$ at order 2 and
+$40.3\%$ at order 3 among persisting customers. Returning customers frequently spend
+excessive session time searching for items they previously purchased. Reducing this
+search friction on visit 2 can compress the decision cycle.
+
+### Hypothesis
+**Hypothesis (to be tested):** Surfacing an instant "Order 1 Favorites" quick-cart
+drawer upon session start for returning second-order shoppers will reduce cart-building
+time, increase visit-to-checkout conversion, and shorten the gap between orders 1 and 2.
+
+### Experiment Design
+
+| Design Element | Specification |
+|---|---|
+| **Target Segment** | All returning users initiating a session after order 1 (prior to placing order 2), with emphasis on slow starters. |
+| **Trigger** | User opens app or website after completing order 1. |
+| **Treatment** | Prominent sticky bottom sheet / homepage drawer displaying all items from order 1 with a single *"Add All Recent Items"* button and individual one-tap plus buttons. |
+| **Control** | Standard homepage interface (generic search bar and category tiles). |
+| **Unit of Randomisation** | User account. |
+| **Primary Metric** | Session-to-checkout conversion rate on visit 2 ($\%$). |
+| **Secondary Metric** | Median time-to-checkout in minutes during visit 2 session. |
+| **Guardrail Metrics** | (1) Total department diversity in order 2 (shelf must not narrow exploration to only repeat items); (2) Total basket item count. |
+| **Assumed Baseline** | Baseline session conversion on visit 2: $\approx 32\%$. Median session time: 14 minutes. |
+| **Minimum Detectable Effect (MDE)** | $+2.5$ percentage points in visit-2 conversion (from $32\%$ to $34.5\%$) and $\ge 2$-minute reduction in session duration. |
+| **Sample Size (Rough)** | $\approx 12,000$ users per arm ($\alpha = 0.05$, power $80\%$). |
+| **Duration** | 4 weeks of concurrent live traffic. |
+| **Stop Criteria** | Stop if department diversity in order 2 drops by $>15\%$ compared to control. |
+
+---
+
+## Methodological Guardrails for All Proposed Tests
+
+- **Designs, Not Claims**: All expected lifts are minimum detectable effects (MDEs) used for power sizing, not claimed results.
+- **Unit of Randomisation**: Randomisation is strictly at the **user level** to avoid intra-user contamination across multi-device sessions.
+- **Fixed Horizon Analysis**: All conversion metrics specify predefined evaluation windows (e.g. 30 days) to prevent continuous monitoring bias.
+- **Economic Guardrail**: Every test must evaluate customer lifetime contribution margin net of incentive and messaging costs.

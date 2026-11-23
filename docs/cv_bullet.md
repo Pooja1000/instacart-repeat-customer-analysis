@@ -1,7 +1,3 @@
 # CV Bullet
 
-> Analysed 3,421,083 orders from 206,209 repeat customers to identify
-> early behaviours associated with becoming a heavy user; found produce share (1st order)
-> associated with 1.14× odds [95% CI: 1.12–1.15]
-> of heavy-user status; proposed 3 experiments to lift repeat ordering
-> with defined success and guardrail metrics.
+> Analysed 3,421,083 orders from 206,209 repeat customers to identify early behaviours associated with becoming a heavy user (≥20 orders); found early return pace strongly differentiated heavy users, while basket composition effects were small (lead OR 1.14 [95% CI 1.13–1.16] for produce share (1st order); all basket Cohen's d < 0.20); proposed 3 A/B test designs targeting second-order retention with defined primary and guardrail metrics.
