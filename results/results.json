@@ -1,0 +1,160 @@
+{
+  "phase0_data_reality_check": {
+    "row_counts": {
+      "orders": 3421083,
+      "order_products_prior": 32434489,
+      "order_products_train": 1384617,
+      "products": 49688,
+      "aisles": 134,
+      "departments": 21
+    },
+    "n_users": 206209,
+    "eval_set": {
+      "prior": {
+        "n_orders": 3214874,
+        "n_users": 206209
+      },
+      "test": {
+        "n_orders": 75000,
+        "n_users": 75000
+      },
+      "train": {
+        "n_orders": 131209,
+        "n_users": 131209
+      }
+    },
+    "orders_per_user": {
+      "min": 4,
+      "max": 100,
+      "mean": 16.6,
+      "p10": 4.0,
+      "p20": 5.0,
+      "p25": 6.0,
+      "p30": 7.0,
+      "p40": 8.0,
+      "p50": 10.0,
+      "p60": 13.0,
+      "p70": 17.0,
+      "p75": 20.0,
+      "p80": 24.0,
+      "p90": 38.0
+    },
+    "days_since_prior_order": {
+      "n_null": 206209,
+      "n_first_orders": 206209,
+      "nulls_match_first_orders": true,
+      "min": 0.0,
+      "max": 30.0,
+      "mean": 11.1,
+      "median": 7.0,
+      "n_at_30": 369323,
+      "n_at_29": 19191,
+      "spike_ratio_30_vs_29": 19.2
+    },
+    "duplicates": {
+      "duplicate_order_ids": 0,
+      "duplicate_order_product_pairs": 0
+    }
+  },
+  "phase1_pipeline": {
+    "n_users_in_features": 206209,
+    "thresholds": {
+      "heavy_p75": 20.0,
+      "heavy_p70": 17.0,
+      "heavy_p80": 24.0,
+      "segment_basket_median": 8.0,
+      "segment_gap_median": 14.5
+    },
+    "heavy_user_counts_p75": {
+      "0": 152278,
+      "1": 53931
+    },
+    "fast_cadence_counts": {
+      "0": 152123,
+      "1": 54086
+    },
+    "heavy_fast_overlap": {
+      "both": 31445,
+      "heavy_only": 22486,
+      "fast_only": 22641,
+      "neither": 129637,
+      "total": 206209
+    },
+    "lifecycle_segments": {
+      "big-and-fast": {
+        "n_users": 59334,
+        "avg_total_orders": 23.2,
+        "avg_median_gap": 11.2,
+        "pct_heavy": 42.8
+      },
+      "big-and-slow": {
+        "n_users": 55132,
+        "avg_total_orders": 10.9,
+        "avg_median_gap": 19.1,
+        "pct_heavy": 12.2
+      },
+      "small-and-fast": {
+        "n_users": 44411,
+        "avg_total_orders": 21.6,
+        "avg_median_gap": 11.4,
+        "pct_heavy": 38.4
+      },
+      "small-and-slow": {
+        "n_users": 47332,
+        "avg_total_orders": 10.2,
+        "avg_median_gap": 19.4,
+        "pct_heavy": 10.1
+      }
+    },
+    "reorder_curve": {
+      "1": {
+        "reorder_rate": 0.0,
+        "n_users": 101696
+      },
+      "2": {
+        "reorder_rate": 0.2821,
+        "n_users": 101696
+      },
+      "3": {
+        "reorder_rate": 0.4026,
+        "n_users": 101696
+      },
+      "4": {
+        "reorder_rate": 0.475,
+        "n_users": 101696
+      },
+      "5": {
+        "reorder_rate": 0.5225,
+        "n_users": 101696
+      },
+      "6": {
+        "reorder_rate": 0.5591,
+        "n_users": 101696
+      },
+      "7": {
+        "reorder_rate": 0.5869,
+        "n_users": 101696
+      },
+      "8": {
+        "reorder_rate": 0.6069,
+        "n_users": 101696
+      },
+      "9": {
+        "reorder_rate": 0.6242,
+        "n_users": 101696
+      },
+      "10": {
+        "reorder_rate": 0.6366,
+        "n_users": 101696
+      }
+    },
+    "null_counts": {
+      "first_order_size": 0,
+      "avg_basket_size_1_3": 0,
+      "reorder_rate_2_3": 0,
+      "days_to_second_order": 0,
+      "days_to_third_order": 0,
+      "lifecycle_segment": 0
+    }
+  }
+}
