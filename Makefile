@@ -1,11 +1,12 @@
 .PHONY: run db test clean
 
-# Run the full pipeline: SQL → parquet → analysis
+# Run the full pipeline: tests → Phase 0 → SQL → analysis → docs
 run: test
 	python src/generate_phase0_results.py
 	python src/run_pipeline.py
 	python src/analysis.py
-	@echo "✅ Full pipeline complete. Results in results/ and data/processed/"
+	python src/generate_docs.py
+	@echo "✅ Full pipeline complete. Results in results/ and docs/"
 
 # Run just the SQL pipeline and export
 db:
