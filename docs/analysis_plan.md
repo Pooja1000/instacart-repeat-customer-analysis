@@ -1,6 +1,16 @@
 # Analysis Plan: What Turns a Grocery Customer into a Regular?
 
-> **Status:** Draft — awaiting approval before any outcome-vs-behaviour analysis.
+> **Status:** Final (approved and executed).
+
+---
+
+## Changes After Review
+
+Following initial model evaluation and review feedback, the following refinements were incorporated into the final pipeline:
+1. **Collinearity Control**: Initial VIF diagnostics revealed severe collinearity between first-order size (`first_order_size`), aisle breadth (`n_aisles_order1`), and department count (`n_departments_order1`). `first_order_size` and `n_aisles_order1` were dropped from both regression models, leaving `avg_basket_size_1_3` and `n_departments_order1`. This reduced all Variance Inflation Factors strictly below 2.5 (true maximum VIF across both models = 2.28) and eliminated all sign flips.
+2. **Constant Cohort Reorder Curve Starts at Order 2**: Order 1 by definition has a reorder rate of 0.0% (no prior purchase history). The constant cohort reorder curve ($n = 101,696$ users with $\ge 10$ orders) is evaluated across orders 2–10 (28.2% to 63.7%), explicitly documenting that the upward slope is partly mechanical as users build purchase history.
+3. **Heavy-User Population Share (26.2%)**: While the primary heavy-user threshold was specified as the top quartile (75th percentile), integer order count ties at exactly 20 orders result in 53,931 heavy users out of 206,209 (26.2% of the user base). This exact share is reported rather than an idealized 25.0%.
+4. **Calibration Assessment Removed**: Because the logistic models serve strictly as descriptive tools to measure conditional associations and odds ratios rather than a clinical scoring or risk-prediction product, calibration curves and Hosmer-Lemeshow goodness-of-fit testing were removed.
 
 ---
 
@@ -213,7 +223,6 @@ Both models use:
 - **Discrimination:** **5-fold cross-validated AUC** (not in-sample) to gauge
   how much early behaviour explains. Presented as descriptive discrimination,
   not a prediction product.
-- **Calibration:** Hosmer-Lemeshow or calibration plot.
 
 We also report the **overlap between heavy-user and fast-cadence
 classifications** (users who are both, either, or neither) to show how

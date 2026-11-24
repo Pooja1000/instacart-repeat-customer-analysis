@@ -524,6 +524,13 @@ days_to_second_order_dist = {
     "pct_after_trigger_day": pct_after_days,
 }
 
+# Nudge 1 target: first_order_size >= 8 AND days_to_second_order > 11
+nudge1_cond = (df["first_order_size"] >= 8) & (df["days_to_second_order"] > 11)
+nudge_1_target = {
+    "count": int(nudge1_cond.sum()),
+    "pct": round(float(nudge1_cond.mean() * 100), 1),
+}
+
 
 # ══════════════════════════════════════════════════════════════
 # 5. HEAVY USER SENSITIVITY CHECKS
@@ -722,6 +729,7 @@ results["phase2_analysis"] = {
     "heavy_fast_overlap": overlap,
     "fast_cadence_sensitivity": fast_cadence_sensitivity,
     "days_to_second_order_distribution": days_to_second_order_dist,
+    "nudge_1_target": nudge_1_target,
     "sensitivity": sensitivity_results,
     "lifecycle_segments": segment_summary,
     "reorder_curve": {
@@ -730,8 +738,8 @@ results["phase2_analysis"] = {
     },
     "reorder_curve_cohort_size": n_cohort,
     "effect_size_summary": {
-        "basket_composition_magnitude": "small (Cohen's d < 0.20; ORs 1.03–1.14)",
-        "timing_cadence_magnitude": "medium-to-large (Cohen's d ~ 0.72–0.76; ORs ~ 0.51–0.55)",
+        "basket_composition_magnitude": "negligible to small (Cohen's d < 0.20; ORs 0.96–1.14)",
+        "timing_cadence_magnitude": "medium (Cohen's d ~ 0.72–0.76; ORs ~ 0.51–0.55)",
     },
 }
 

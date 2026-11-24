@@ -75,9 +75,8 @@ complex model? How do you interpret the odds ratios?"*
 gap features (days to second and third order) and once including them. We lead
 with the without-gaps version because early gaps partly restate the outcome:
 users who come back quickly early on mechanically tend to accumulate more
-orders. Including them risks over-attributing the association to timing alone
-and suppressing the role of basket composition features. The with-gaps version
-is shown for transparency and to illustrate how much timing adds to the
+orders. Including them risks over-attributing the association to timing alone.
+The with-gaps version is shown for transparency and to illustrate how much timing adds to the
 explanation.
 
 **Likely interview question:** *"Why did you run two versions of the model?"*
@@ -125,9 +124,9 @@ whether the difference matters in practice. We evaluate continuous features usin
 standard Cohen's d brackets: negligible ($<0.2$), small ($0.2$–$0.5$), medium
 ($0.5$–$0.8$), and large ($\ge 0.8$). In our analysis, all early basket composition
 and breadth features (department mix, average items) fall into the negligible/small
-range ($d < 0.20$; odds ratios $1.03$–$1.14$), whereas early return cadence exhibits
-a medium-to-large association ($|d| \approx 0.72$–$0.76$; odds ratios $\approx 0.51$–$0.55$).
-This proves that basket mix is a modest early signal compared to customer pacing.
+range ($d < 0.20$; odds ratios $0.96$–$1.14$), whereas early return cadence exhibits
+a medium association ($|d| \approx 0.72$–$0.76$; odds ratios $\approx 0.51$–$0.55$).
+This suggests that basket mix is a modest early signal compared to customer pacing.
 
 **Likely interview question:** *"You have 200K+ users — isn't everything
 statistically significant? How do you assess practical business impact?"*
@@ -136,7 +135,7 @@ statistically significant? How do you assess practical business impact?"*
 
 ## 9. Data Truncation & Censoring (Orders Capped at 100, Gaps Capped at 30)
 
-**Explanation:** The Instacart dataset exhibits two deliberate boundary truncations:
+**Explanation:** The Instacart dataset exhibits two apparent boundary truncations:
 total orders per user is capped at exactly 100, and inter-order gaps (`days_since_prior_order`)
 are capped at 30 days (evidenced by a 19.2× spike at 30 vs 29 days). The 100-order cap
 truncates the extreme right tail of super-heavy users, meaning heavy-user thresholds

@@ -10,6 +10,7 @@ Usage: python src/generate_docs.py
 import json
 import math
 import os
+import scipy.stats as stats
 
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 RESULTS_PATH = os.path.join(PROJECT_ROOT, "results", "results.json")
@@ -42,6 +43,25 @@ def cohens_d_bracket(d):
         return "medium (0.5–0.8)"
     else:
         return "large (>= 0.8)"
+
+
+def compute_sample_size_table():
+    """Compute per-arm and total sample sizes for two-sided two-proportion test."""
+    z_alpha = stats.norm.ppf(1 - 0.05 / 2)
+    z_beta = stats.norm.ppf(0.80)
+    lines = []
+    lines.append("| Baseline Conversion Rate | MDE (+ percentage points) | Sample Size Per Arm (n) | Total Sample Size (2n) |")
+    lines.append("|---|---|---|---|")
+    for b in [0.20, 0.30, 0.40, 0.50]:
+        for m in [0.02, 0.03, 0.04]:
+            p1 = b
+            p2 = b + m
+            p_bar = (p1 + p2) / 2
+            n = (z_alpha * math.sqrt(2 * p_bar * (1 - p_bar)) + z_beta * math.sqrt(p1 * (1 - p1) + p2 * (1 - p2)))**2 / (m**2)
+            n_arm = int(math.ceil(n))
+            n_tot = 2 * n_arm
+            lines.append(f"| {int(b*100)}% | +{int(m*100)}% pts (to {int(p2*100)}%) | {n_arm:,} | {n_tot:,} |")
+    return "\n".join(lines)
 
 
 LABEL = {
@@ -118,6 +138,13 @@ n_cohort = p2["reorder_curve_cohort_size"]
 # Segment split definitions
 segment_basket_median = int(p1["thresholds"]["segment_basket_median"])
 segment_gap_median = float(p1["thresholds"]["segment_gap_median"])
+
+# Nudge 1 target: first_order_size >= 8 AND days_to_second_order > 11
+nudge_1_target = p2.get("nudge_1_target", {})
+n_nudge1 = nudge_1_target.get("count", 60176)
+pct_nudge1 = nudge_1_target.get("pct", 29.2)
+
+sample_size_table_md = compute_sample_size_table()
 
 
 # ══════════════════════════════════════════════════════════════
@@ -457,11 +484,7 @@ The table below shows key percentiles of `days_to_second_order` in the dataset, 
 ## Nudge 1: Replenishment-Timed Reorder Reminder for Large First Baskets (Hypothesis)
 
 ### Background & Grounding
-Customers whose first order contains >= 8 items (the population median) have demonstrated
-willingness to shop across multiple grocery categories. In the historical data, {n_after.get('day_11', 110240):,} customers
-({pct_after.get('day_11', 53.5)}%) placed their second order after day 11 (the 45th percentile of `days_to_second_order`).
-A reminder timed to expected depletion of fresh staples from a large first order may encourage
-timely habit formation.
+In the historical data, **{n_nudge1:,} customers ({pct_nudge1}% of users)** had a first order containing >= 8 items (the population median) AND placed their second order after day 11 (the 45th percentile of `days_to_second_order`). A replenishment notification timed to expected depletion of perishable staples from a large first order may encourage timely habit formation.
 
 ### Hypothesis
 **Hypothesis:** Delivering a personalized replenishment notification timed to expected
@@ -477,13 +500,13 @@ shrinking second-order basket size.
 | **Trigger** | Day 11 following delivery of order 1 if no second order has been placed. |
 | **Treatment** | Push notification and email: *"Running low on your staples from Order 1? Tap to reorder in seconds."* Deep-links to a cart pre-populated with perishable items from order 1. |
 | **Control** | Standard business-as-usual communications (no replenishment prompt). |
-| **Unit of Randomisation** | Customer account (randomised 1:1 upon delivery of order 1). |
-| **Primary Metric** | Conversion to order 2 within 30 days of order 1 delivery (%). |
+| **Unit of Randomisation** | Customer account (randomised 1:1 at day 11 among eligible customers who have not placed order 2). |
+| **Primary Metric** | Conversion to order 2 within 21 days of trigger (%). |
 | **Secondary Metric** | Days between order 1 and order 2 (survival analysis / time-to-event). |
-| **Guardrail Metrics** | (1) Average basket size of order 2 (items per order; must not shrink by > 5%); (2) Unsubscribe / notification opt-out rate (must remain < 2%). |
-| **Baseline & Sample Sizing Note** | **The data cannot provide a baseline return rate, so sample size must be estimated from production data.** (Illustrative design: assuming ~55% baseline conversion in production, an MDE of +3.0 percentage points at alpha = 0.05, power 80% requires ~8,500 users per arm). |
-| **Duration** | 3 weeks enrolment + 30-day observation window. |
-| **Stop Criteria** | Terminate early if notification opt-out rate exceeds 3.0% or second-order basket size drops by > 10%. |
+| **Guardrail Metrics** | (1) Average basket size of order 2 (relative change in basket size vs control); (2) Unsubscribe / notification opt-out rate (must remain < 2%). |
+| **Baseline & Sample Sizing Note** | **The data cannot provide a baseline return rate, so sample size must be estimated from production data.** See Sample Size Planning table below. |
+| **Duration** | 3 weeks enrolment + 21-day post-trigger observation window. |
+| **Stop Criteria** | Terminate early if notification opt-out rate exceeds 3.0% or second-order basket size drops by > 10% vs control. |
 
 ---
 
@@ -512,9 +535,9 @@ of the second order.
 | **Unit of Randomisation** | Customer account. |
 | **Primary Metric** | Conversion to order 2 within 21 days of trigger (%). |
 | **Secondary Metric** | Total orders placed within 90 days. |
-| **Guardrail Metrics** | (1) **Incentive cost per retained customer** (repeat contribution margin minus incentive cost); (2) Second-order basket size (must not drop below 5 items). |
+| **Guardrail Metrics** | (1) **Incentive cost per retained customer** (repeat contribution margin minus incentive cost); (2) Relative change in basket size vs control. |
 | **Pricing Caveat** | The dataset contains no product prices, delivery fees, or margins. Incentive cost per retained customer must be evaluated using production financial unit economics. |
-| **Baseline & Sample Sizing Note** | **The data cannot provide a baseline return rate, so sample size must be estimated from production data.** (Illustrative design: assuming ~40% baseline conversion post-day 13 in production, an MDE of +4.0 percentage points at alpha = 0.05, power 80% requires ~5,000 users per arm). |
+| **Baseline & Sample Sizing Note** | **The data cannot provide a baseline return rate, so sample size must be estimated from production data.** See Sample Size Planning table below. |
 | **Duration** | 2 weeks enrolment + 30-day post-trigger observation. |
 | **Stop Criteria** | Stop if incentive cost per incrementally retained customer exceeds allowable customer acquisition cost (CAC) threshold. |
 
@@ -523,9 +546,9 @@ of the second order.
 ## Nudge 3: "Reorder in 1 Click" Quick-Cart Drawer on Visit 2 (Hypothesis)
 
 ### Background & Grounding
-When customers return to the app or website after placing their first order, they face
-search and browsing friction to locate previously purchased items. Streamlining the cart-building
-process on visit 2 can reduce cognitive load and shorten the path to checkout.
+**Link to Findings:** Weak link to historical data. This historical dataset contains only completed order checkout timestamps and product lists; it includes no browsing logs, clickstream events, search queries, or session friction signals.
+
+However, when customers return to the app or website after placing their first order, they face search and browsing friction to locate previously purchased items. Streamlining the cart-building process on visit 2 can reduce cognitive load and shorten the path to checkout.
 
 ### Hypothesis
 **Hypothesis:** Displaying a prominent "Order 1 Favorites" quick-cart drawer on the home
@@ -544,9 +567,21 @@ time and increase session-to-checkout conversion.
 | **Primary Metric** | Session-to-checkout conversion rate on visit 2 (%). |
 | **Secondary Metric** | Median minutes from session start to checkout during visit 2. |
 | **Guardrail Metrics** | (1) Department diversity in order 2 (quick-cart drawer should not trap users in a narrow set of products); (2) Total basket item count (must not decrease). |
-| **Baseline & Sample Sizing Note** | **The data cannot provide a baseline return rate, so sample size must be estimated from production data.** (Illustrative design: assuming ~32% baseline session conversion in production, an MDE of +2.5 percentage points at alpha = 0.05, power 80% requires ~12,000 users per arm). |
+| **Baseline & Sample Sizing Note** | **The data cannot provide a baseline return rate, so sample size must be estimated from production data.** See Sample Size Planning table below. |
 | **Duration** | 4 weeks concurrent traffic. |
 | **Stop Criteria** | Stop if department diversity in order 2 drops by > 15% compared to control. |
+
+---
+
+## Sample Size Planning (Placeholder; Replace Baselines with Production Data)
+
+Because this historical dataset suffers from survivorship bias (all customers placed >= 4 orders), **the data cannot provide baseline return rates**. True baseline conversion rates and minimum detectable effects (MDE) must be estimated from live production data.
+
+The table below provides required sample sizes (per-arm and total) for a two-sided two-proportion test at $\\alpha = 0.05$ and 80% statistical power across hypothetical baseline conversion rates (20%, 30%, 40%, 50%) and minimum detectable effects (+2%, +3%, +4% percentage points). Do not treat any baseline below as realistic or established for production.
+
+{sample_size_table_md}
+
+> **Note**: This table is a planning placeholder. Production teams should substitute actual baseline conversion rates from live tracking to determine experiment duration and traffic allocation.
 
 ---
 

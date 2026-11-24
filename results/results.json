@@ -696,6 +696,10 @@
         "day_28": 24.2
       }
     },
+    "nudge_1_target": {
+      "count": 60176,
+      "pct": 29.2
+    },
     "sensitivity": {
       "top_30pct": {
         "odds_ratios": {
@@ -862,8 +866,8 @@
     },
     "reorder_curve_cohort_size": 101696,
     "effect_size_summary": {
-      "basket_composition_magnitude": "small (Cohen's d < 0.20; ORs 1.03\u20131.14)",
-      "timing_cadence_magnitude": "medium-to-large (Cohen's d ~ 0.72\u20130.76; ORs ~ 0.51\u20130.55)"
+      "basket_composition_magnitude": "negligible to small (Cohen's d < 0.20; ORs 0.96\u20131.14)",
+      "timing_cadence_magnitude": "medium (Cohen's d ~ 0.72\u20130.76; ORs ~ 0.51\u20130.55)"
     }
   }
 }
