@@ -26,9 +26,9 @@ in your feature engineering?"*
 who placed fewer than 4 orders are completely absent. This means
 our analysis only describes differences among already-retained customers — we
 cannot say anything about what makes a first-time buyer come back at all. The
-associations we find (e.g., bigger first baskets are associated with becoming a
+associations we find (e.g., early return pace is associated with becoming a
 heavy user) might look different if we could also see the users who placed
-fewer than 4 orders, because those users might also have had large first baskets but dropped
+fewer than 4 orders, because those users might also have had fast early pace but dropped
 off for reasons invisible to us.
 
 **Likely interview question:** *"Your data only has users with 4+ orders. How
@@ -42,9 +42,8 @@ does that affect your conclusions?"*
 means without assuming a specific distribution (like normality). We resample
 the data with replacement 10,000 times, compute the statistic each time, and
 take the 2.5th and 97.5th percentiles of the resulting distribution as the 95%
-CI bounds. This is especially useful here because many of our features (like
-reorder rate and department shares) have skewed distributions where the normal
-approximation would be unreliable. We use a fixed random seed so that every run
+CI bounds. With ~200K users, analytic CIs would be very close; bootstrap gives one
+assumption-light method for many statistics. We use a fixed random seed so that every run
 produces the same intervals.
 
 **Likely interview question:** *"Why did you use bootstrap CIs instead of
@@ -101,16 +100,16 @@ artifact of the threshold you chose?"*
 ## 7. Why Descriptive, Not Causal
 
 **Explanation:** All our findings are associations — we see that users with
-larger first baskets *tend to* end up as heavy users, but we cannot say that
-large first baskets *cause* someone to become a heavy user. There could be
+higher produce share in their first order *tend to* end up as heavy users, but we cannot say that
+a high produce share *causes* someone to become a heavy user. There could be
 confounders we cannot observe: for example, users who already intended to be
-regular customers might place larger first orders because they are committed
+regular customers might buy more produce in their first order because they are committed
 from the start. Without randomisation (like an A/B test), we cannot separate
 the effect of the behaviour from the effect of the unobserved intent. This is
 why our nudge proposals are presented as *experiments to test*, not as proven
 interventions.
 
-**Likely interview question:** *"Can you say that increasing basket size will
+**Likely interview question:** *"Can you say that a higher produce share will
 cause more repeat purchases?"*
 
 ---
@@ -140,7 +139,7 @@ total orders per user is capped at exactly 100, and inter-order gaps (`days_sinc
 are capped at 30 days (evidenced by a 19.2× spike at 30 vs 29 days). The 100-order cap
 truncates the extreme right tail of super-heavy users, meaning heavy-user thresholds
 capture customers with $\ge 20$ orders but compress the distinction between moderate
-regulars (e.g. 30 orders) and power users (e.g. 150+ true orders). The 30-day cap
+regulars (e.g. 30 orders) and power users (e.g. more than 100 true orders). The 30-day cap
 censors long customer churn gaps, compressing the slow tail and making slow users
 appear faster than they truly were. However, our primary thresholds (top quartile heavy
 status at 20 orders, fast cadence at 7 days) sit comfortably below these caps.

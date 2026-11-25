@@ -102,7 +102,7 @@ Because **second-order timing is the earliest point where a test could intervene
    Target customers whose first order contained >= 8 items who have not placed order 2 by day 11 (the 45th percentile of days to second order) with a reminder timed to perishable staple depletion.
 2. **Second-order re-engagement incentive for slow starters (Hypothesis)**:
    Target customers who have placed exactly 1 order and have not placed order 2 by day 13 (the empirical median of days to second order) with a time-limited free delivery incentive.
-   *Guardrail*: Incentive cost per retained customer, noting that the dataset contains no prices.
+   *Guardrail*: Incentive cost per incremental order, noting that the dataset contains no prices.
 3. **"Reorder in 1 Click" quick-cart drawer on visit 2 (Hypothesis)**:
    Surface past staples on visit 2 session start to reduce cart-building friction.
 

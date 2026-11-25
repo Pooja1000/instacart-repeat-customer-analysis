@@ -60,7 +60,7 @@ def compute_sample_size_table():
             n = (z_alpha * math.sqrt(2 * p_bar * (1 - p_bar)) + z_beta * math.sqrt(p1 * (1 - p1) + p2 * (1 - p2)))**2 / (m**2)
             n_arm = int(math.ceil(n))
             n_tot = 2 * n_arm
-            lines.append(f"| {int(b*100)}% | +{int(m*100)}% pts (to {int(p2*100)}%) | {n_arm:,} | {n_tot:,} |")
+            lines.append(f"| {int(b*100)}% | +{int(m*100)}% pts (to {round(p2*100)}%) | {n_arm:,} | {n_tot:,} |")
     return "\n".join(lines)
 
 
@@ -255,7 +255,7 @@ Because **second-order timing is the earliest point where a test could intervene
    Target customers whose first order contained >= 8 items who have not placed order 2 by day 11 (the 45th percentile of days to second order) with a reminder timed to perishable staple depletion.
 2. **Second-order re-engagement incentive for slow starters (Hypothesis)**:
    Target customers who have placed exactly 1 order and have not placed order 2 by day 13 (the empirical median of days to second order) with a time-limited free delivery incentive.
-   *Guardrail*: Incentive cost per retained customer, noting that the dataset contains no prices.
+   *Guardrail*: Incentive cost per incremental order, noting that the dataset contains no prices.
 3. **"Reorder in 1 Click" quick-cart drawer on visit 2 (Hypothesis)**:
    Surface past staples on visit 2 session start to reduce cart-building friction.
 
@@ -503,10 +503,10 @@ shrinking second-order basket size.
 | **Unit of Randomisation** | Customer account (randomised 1:1 at day 11 among eligible customers who have not placed order 2). |
 | **Primary Metric** | Conversion to order 2 within 21 days of trigger (%). |
 | **Secondary Metric** | Days between order 1 and order 2 (survival analysis / time-to-event). |
-| **Guardrail Metrics** | (1) Average basket size of order 2 (relative change in basket size vs control); (2) Unsubscribe / notification opt-out rate (must remain < 2%). |
+| **Guardrail Metrics** | (1) Relative change in basket size of order 2 vs control; (2) Notification opt-out rate (must remain < 2%). |
 | **Baseline & Sample Sizing Note** | **The data cannot provide a baseline return rate, so sample size must be estimated from production data.** See Sample Size Planning table below. |
 | **Duration** | 3 weeks enrolment + 21-day post-trigger observation window. |
-| **Stop Criteria** | Terminate early if notification opt-out rate exceeds 3.0% or second-order basket size drops by > 10% vs control. |
+| **Stop Criteria** | Terminate early if notification opt-out rate exceeds 2.0% or second-order basket size drops by > 10% vs control. |
 
 ---
 
@@ -535,8 +535,8 @@ of the second order.
 | **Unit of Randomisation** | Customer account. |
 | **Primary Metric** | Conversion to order 2 within 21 days of trigger (%). |
 | **Secondary Metric** | Total orders placed within 90 days. |
-| **Guardrail Metrics** | (1) **Incentive cost per retained customer** (repeat contribution margin minus incentive cost); (2) Relative change in basket size vs control. |
-| **Pricing Caveat** | The dataset contains no product prices, delivery fees, or margins. Incentive cost per retained customer must be evaluated using production financial unit economics. |
+| **Guardrail Metrics** | (1) **Incentive cost per incremental order**: (promo cost in treatment − promo cost in control) / incremental orders; (2) Relative change in basket size vs control. |
+| **Pricing Caveat** | The dataset contains no product prices, delivery fees, or margins. Incentive cost per incremental order must be evaluated using production financial unit economics. |
 | **Baseline & Sample Sizing Note** | **The data cannot provide a baseline return rate, so sample size must be estimated from production data.** See Sample Size Planning table below. |
 | **Duration** | 2 weeks enrolment + 30-day post-trigger observation. |
 | **Stop Criteria** | Stop if incentive cost per incrementally retained customer exceeds allowable customer acquisition cost (CAC) threshold. |
@@ -546,7 +546,7 @@ of the second order.
 ## Nudge 3: "Reorder in 1 Click" Quick-Cart Drawer on Visit 2 (Hypothesis)
 
 ### Background & Grounding
-**Link to Findings:** Weak link to historical data. This historical dataset contains only completed order checkout timestamps and product lists; it includes no browsing logs, clickstream events, search queries, or session friction signals.
+**Link to Findings:** Weak link to historical data. The dataset has only day-of-week, hour-of-day and days-since-prior-order; no timestamps, browsing, clickstream or session data.
 
 However, when customers return to the app or website after placing their first order, they face search and browsing friction to locate previously purchased items. Streamlining the cart-building process on visit 2 can reduce cognitive load and shorten the path to checkout.
 
@@ -566,7 +566,7 @@ time and increase session-to-checkout conversion.
 | **Unit of Randomisation** | Customer account. |
 | **Primary Metric** | Session-to-checkout conversion rate on visit 2 (%). |
 | **Secondary Metric** | Median minutes from session start to checkout during visit 2. |
-| **Guardrail Metrics** | (1) Department diversity in order 2 (quick-cart drawer should not trap users in a narrow set of products); (2) Total basket item count (must not decrease). |
+| **Guardrail Metrics** | (1) Department diversity in order 2 (relative change vs control; quick-cart drawer should not trap users in a narrow set of products); (2) Relative change in basket item count vs control. |
 | **Baseline & Sample Sizing Note** | **The data cannot provide a baseline return rate, so sample size must be estimated from production data.** See Sample Size Planning table below. |
 | **Duration** | 4 weeks concurrent traffic. |
 | **Stop Criteria** | Stop if department diversity in order 2 drops by > 15% compared to control. |
@@ -577,11 +577,19 @@ time and increase session-to-checkout conversion.
 
 Because this historical dataset suffers from survivorship bias (all customers placed >= 4 orders), **the data cannot provide baseline return rates**. True baseline conversion rates and minimum detectable effects (MDE) must be estimated from live production data.
 
-The table below provides required sample sizes (per-arm and total) for a two-sided two-proportion test at $\\alpha = 0.05$ and 80% statistical power across hypothetical baseline conversion rates (20%, 30%, 40%, 50%) and minimum detectable effects (+2%, +3%, +4% percentage points). Do not treat any baseline below as realistic or established for production.
+The table below provides required sample sizes (per-arm and total) for a two-sided two-proportion test at alpha = 0.05 and 80% statistical power across hypothetical baseline conversion rates (20%, 30%, 40%, 50%) and minimum detectable effects (+2%, +3%, +4% percentage points). Do not treat any baseline below as realistic or established for production.
+
+**Formula**: Sample sizes are computed using the unpooled variance formula for two independent proportions (no continuity correction): $n = (z_{{\\alpha/2}} \\sqrt{{2 \\bar p (1-\\bar p)}} + z_\\beta \\sqrt{{p_1(1-p_1)+p_2(1-p_2)}})^2 / (p_2-p_1)^2$, where $\\bar p = (p_1+p_2)/2$, implemented via `scipy.stats.norm.ppf`.
 
 {sample_size_table_md}
 
 > **Note**: This table is a planning placeholder. Production teams should substitute actual baseline conversion rates from live tracking to determine experiment duration and traffic allocation.
+
+---
+
+## Test Interaction Note
+
+Nudges 1 and 2 can target the same customers (day-11 trigger vs day-13 trigger for users with first order >= 8 items). To avoid contamination, either run them as **separate, sequential tests** or make the audiences **mutually exclusive** (e.g., randomly assign eligible customers to one nudge only).
 
 ---
 
@@ -590,7 +598,7 @@ The table below provides required sample sizes (per-arm and total) for a two-sid
 - **Hypotheses, Not Results**: All proposed lifts are minimum detectable effects for test sizing, not proven outcomes.
 - **Pre-Intervention Targeting**: No nudge uses order-3 lifecycle definitions; all targeting rules rely strictly on data available at trigger time.
 - **Holdout Controls**: Untreated holdout controls are mandatory to isolate true incremental returns from survivorship-driven organic returns.
-- **Economic Evaluation**: Financial guardrails (incentive cost per retained customer) must be evaluated with production cost data, as the dataset contains no pricing.
+- **Economic Evaluation**: Financial guardrails (incentive cost per incremental order: (promo cost in treatment − promo cost in control) / incremental orders) must be evaluated with production cost data, as the dataset contains no pricing.
 """
 
 nudges_path = os.path.join(PROJECT_ROOT, "docs", "nudges.md")

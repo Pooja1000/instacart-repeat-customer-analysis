@@ -166,7 +166,7 @@ If the same features rank similarly across thresholds, findings are robust.
 
 | # | Feature | Source | Description |
 |---|---------|--------|-------------|
-| 1 | `first_order_size` | order 1 basket | Number of items in the first order |
+| 1 | `first_order_size` | order 1 basket | Number of items in the first order *(computed; excluded from models due to collinearity)* |
 | 2 | `avg_basket_size_1_3` | orders 1–3 | Mean items per order across first 3 orders |
 | 3 | `reorder_rate_2_3` | orders 2–3 | Share of items in orders 2–3 that are reorders |
 | 4 | `days_to_second_order` | orders 1→2 gap | days_since_prior_order for order 2 |
@@ -178,7 +178,7 @@ If the same features rank similarly across thresholds, findings are robust.
 | 10 | `pct_dairy_order1` | order 1 basket | % of first-order items from Dairy Eggs dept |
 | 11 | `pct_snacks_order1` | order 1 basket | % of first-order items from Snacks dept |
 | 12 | `n_departments_order1` | order 1 basket | Number of distinct departments in first order |
-| 13 | `n_aisles_order1` | order 1 basket | Number of distinct aisles in first order |
+| 13 | `n_aisles_order1` | order 1 basket | Number of distinct aisles in first order *(computed; excluded from models due to collinearity)* |
 
 **Notes:**
 - Features 4 and 5 are affected by the 30-day cap. We document this but keep

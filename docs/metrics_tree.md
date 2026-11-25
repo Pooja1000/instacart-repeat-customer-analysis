@@ -2,7 +2,7 @@
 
 ## North Star
 
-**Orders in the 90 days after the first order** — the primary production North Star metric tracking sustained habit formation and customer lifetime value. (In this historical dataset without calendar timestamps, this is proxied by repeat orders per user from order 4 onward).
+**Orders in the 90 days after the first order** — the primary production North Star metric tracking sustained habit formation. (In this historical dataset without calendar timestamps, this is proxied by repeat orders per user from order 4 onward).
 
 ## Input Metrics
 

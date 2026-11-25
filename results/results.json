@@ -162,13 +162,13 @@
       "first_order_size": {
         "heavy_mean": 10.7744,
         "heavy_ci": [
-          10.7093,
-          10.8396
+          10.7101,
+          10.839
         ],
         "non_heavy_mean": 9.8307,
         "non_heavy_ci": [
-          9.7919,
-          9.8673
+          9.7942,
+          9.8676
         ],
         "difference": 0.9437,
         "cohens_d": 0.1266,
@@ -178,12 +178,12 @@
       "avg_basket_size_1_3": {
         "heavy_mean": 10.5573,
         "heavy_ci": [
-          10.5017,
-          10.6116
+          10.5031,
+          10.612
         ],
         "non_heavy_mean": 9.7826,
         "non_heavy_ci": [
-          9.7503,
+          9.7513,
           9.8142
         ],
         "difference": 0.7747,
@@ -210,13 +210,13 @@
       "days_to_second_order": {
         "heavy_mean": 10.1027,
         "heavy_ci": [
-          10.036,
-          10.1696
+          10.0354,
+          10.1702
         ],
         "non_heavy_mean": 17.1977,
         "non_heavy_ci": [
-          17.1449,
-          17.2497
+          17.1461,
+          17.2514
         ],
         "difference": -7.095,
         "cohens_d": -0.7239,
@@ -226,13 +226,13 @@
       "days_to_third_order": {
         "heavy_mean": 9.8259,
         "heavy_ci": [
-          9.7604,
-          9.8907
+          9.7599,
+          9.893
         ],
         "non_heavy_mean": 17.2211,
         "non_heavy_ci": [
-          17.1684,
-          17.2714
+          17.1703,
+          17.2731
         ],
         "difference": -7.3952,
         "cohens_d": -0.7598,
@@ -242,7 +242,7 @@
       "busiest_days_share_1_3": {
         "heavy_mean": 0.3513,
         "heavy_ci": [
-          0.3488,
+          0.3487,
           0.3538
         ],
         "non_heavy_mean": 0.357,
@@ -258,7 +258,7 @@
       "morning_share_1_3": {
         "heavy_mean": 0.3358,
         "heavy_ci": [
-          0.3332,
+          0.3331,
           0.3384
         ],
         "non_heavy_mean": 0.2991,
@@ -280,7 +280,7 @@
         "non_heavy_mean": 0.2497,
         "non_heavy_ci": [
           0.2483,
-          0.2511
+          0.2512
         ],
         "difference": -0.0156,
         "cohens_d": -0.055,
@@ -306,7 +306,7 @@
       "pct_dairy_order1": {
         "heavy_mean": 0.17,
         "heavy_ci": [
-          0.1685,
+          0.1686,
           0.1715
         ],
         "non_heavy_mean": 0.1541,
@@ -338,12 +338,12 @@
       "n_departments_order1": {
         "heavy_mean": 4.9214,
         "heavy_ci": [
-          4.9002,
-          4.9437
+          4.9006,
+          4.9424
         ],
         "non_heavy_mean": 4.7159,
         "non_heavy_ci": [
-          4.7025,
+          4.7028,
           4.7287
         ],
         "difference": 0.2056,
@@ -354,13 +354,13 @@
       "n_aisles_order1": {
         "heavy_mean": 7.6413,
         "heavy_ci": [
-          7.6005,
-          7.6819
+          7.602,
+          7.6815
         ],
         "non_heavy_mean": 7.155,
         "non_heavy_ci": [
-          7.1301,
-          7.1786
+          7.1312,
+          7.1789
         ],
         "difference": 0.4863,
         "cohens_d": 0.102,
@@ -435,8 +435,8 @@
             "practically_meaningful": false
           }
         },
-        "cv_auc_mean": 0.5676,
-        "cv_auc_std": 0.002,
+        "cv_auc_mean": 0.5675,
+        "cv_auc_std": 0.0011,
         "pseudo_r_squared": 0.0097,
         "n_obs": 206209,
         "vif": [
@@ -561,7 +561,7 @@
           }
         },
         "cv_auc_mean": 0.7559,
-        "cv_auc_std": 0.0029,
+        "cv_auc_std": 0.0023,
         "pseudo_r_squared": 0.1434,
         "n_obs": 206209,
         "vif": [
@@ -749,7 +749,7 @@
             "ci_upper": 1.0483
           }
         },
-        "cv_auc_mean": 0.5627,
+        "cv_auc_mean": 0.5626,
         "n_heavy": 65296,
         "n_total": 206209
       },
@@ -818,6 +818,17 @@
         "avg_first_order_size": 14.8,
         "avg_reorder_rate": 0.341
       },
+      "big-and-fast": {
+        "n_users": 59334,
+        "pct_of_total": 28.8,
+        "avg_total_orders": 23.2,
+        "median_total_orders": 16.0,
+        "avg_median_gap": 11.2,
+        "pct_heavy": 42.8,
+        "pct_fast_cadence": 41.0,
+        "avg_first_order_size": 14.9,
+        "avg_reorder_rate": 0.365
+      },
       "small-and-slow": {
         "n_users": 47332,
         "pct_of_total": 23.0,
@@ -839,17 +850,6 @@
         "pct_fast_cadence": 41.5,
         "avg_first_order_size": 4.3,
         "avg_reorder_rate": 0.317
-      },
-      "big-and-fast": {
-        "n_users": 59334,
-        "pct_of_total": 28.8,
-        "avg_total_orders": 23.2,
-        "median_total_orders": 16.0,
-        "avg_median_gap": 11.2,
-        "pct_heavy": 42.8,
-        "pct_fast_cadence": 41.0,
-        "avg_first_order_size": 14.9,
-        "avg_reorder_rate": 0.365
       }
     },
     "reorder_curve": {
