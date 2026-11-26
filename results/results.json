@@ -162,13 +162,13 @@
       "first_order_size": {
         "heavy_mean": 10.7744,
         "heavy_ci": [
-          10.7101,
-          10.839
+          10.7096,
+          10.8381
         ],
         "non_heavy_mean": 9.8307,
         "non_heavy_ci": [
-          9.7942,
-          9.8676
+          9.7934,
+          9.8672
         ],
         "difference": 0.9437,
         "cohens_d": 0.1266,
@@ -178,13 +178,13 @@
       "avg_basket_size_1_3": {
         "heavy_mean": 10.5573,
         "heavy_ci": [
-          10.5031,
-          10.612
+          10.5027,
+          10.6113
         ],
         "non_heavy_mean": 9.7826,
         "non_heavy_ci": [
-          9.7513,
-          9.8142
+          9.7508,
+          9.8144
         ],
         "difference": 0.7747,
         "cohens_d": 0.1222,
@@ -199,7 +199,7 @@
         ],
         "non_heavy_mean": 0.3275,
         "non_heavy_ci": [
-          0.3263,
+          0.3264,
           0.3286
         ],
         "difference": 0.019,
@@ -210,13 +210,13 @@
       "days_to_second_order": {
         "heavy_mean": 10.1027,
         "heavy_ci": [
-          10.0354,
-          10.1702
+          10.0343,
+          10.1691
         ],
         "non_heavy_mean": 17.1977,
         "non_heavy_ci": [
-          17.1461,
-          17.2514
+          17.1452,
+          17.2492
         ],
         "difference": -7.095,
         "cohens_d": -0.7239,
@@ -226,13 +226,13 @@
       "days_to_third_order": {
         "heavy_mean": 9.8259,
         "heavy_ci": [
-          9.7599,
-          9.893
+          9.7603,
+          9.8904
         ],
         "non_heavy_mean": 17.2211,
         "non_heavy_ci": [
-          17.1703,
-          17.2731
+          17.1685,
+          17.274
         ],
         "difference": -7.3952,
         "cohens_d": -0.7598,
@@ -242,7 +242,7 @@
       "busiest_days_share_1_3": {
         "heavy_mean": 0.3513,
         "heavy_ci": [
-          0.3487,
+          0.3488,
           0.3538
         ],
         "non_heavy_mean": 0.357,
@@ -258,12 +258,12 @@
       "morning_share_1_3": {
         "heavy_mean": 0.3358,
         "heavy_ci": [
-          0.3331,
-          0.3384
+          0.3332,
+          0.3385
         ],
         "non_heavy_mean": 0.2991,
         "non_heavy_ci": [
-          0.2976,
+          0.2975,
           0.3006
         ],
         "difference": 0.0367,
@@ -306,7 +306,7 @@
       "pct_dairy_order1": {
         "heavy_mean": 0.17,
         "heavy_ci": [
-          0.1686,
+          0.1685,
           0.1715
         ],
         "non_heavy_mean": 0.1541,
@@ -323,7 +323,7 @@
         "heavy_mean": 0.0907,
         "heavy_ci": [
           0.0894,
-          0.092
+          0.0919
         ],
         "non_heavy_mean": 0.0868,
         "non_heavy_ci": [
@@ -338,12 +338,12 @@
       "n_departments_order1": {
         "heavy_mean": 4.9214,
         "heavy_ci": [
-          4.9006,
-          4.9424
+          4.9003,
+          4.9426
         ],
         "non_heavy_mean": 4.7159,
         "non_heavy_ci": [
-          4.7028,
+          4.7029,
           4.7287
         ],
         "difference": 0.2056,
@@ -354,13 +354,13 @@
       "n_aisles_order1": {
         "heavy_mean": 7.6413,
         "heavy_ci": [
-          7.602,
-          7.6815
+          7.6004,
+          7.6813
         ],
         "non_heavy_mean": 7.155,
         "non_heavy_ci": [
-          7.1312,
-          7.1789
+          7.131,
+          7.1785
         ],
         "difference": 0.4863,
         "cohens_d": 0.102,
@@ -436,7 +436,7 @@
           }
         },
         "cv_auc_mean": 0.5675,
-        "cv_auc_std": 0.0011,
+        "cv_auc_std": 0.0032,
         "pseudo_r_squared": 0.0097,
         "n_obs": 206209,
         "vif": [
@@ -561,7 +561,7 @@
           }
         },
         "cv_auc_mean": 0.7559,
-        "cv_auc_std": 0.0023,
+        "cv_auc_std": 0.0028,
         "pseudo_r_squared": 0.1434,
         "n_obs": 206209,
         "vif": [
@@ -749,7 +749,7 @@
             "ci_upper": 1.0483
           }
         },
-        "cv_auc_mean": 0.5626,
+        "cv_auc_mean": 0.5624,
         "n_heavy": 65296,
         "n_total": 206209
       },
@@ -801,34 +801,12 @@
             "ci_upper": 1.0548
           }
         },
-        "cv_auc_mean": 0.5731,
+        "cv_auc_mean": 0.5732,
         "n_heavy": 42499,
         "n_total": 206209
       }
     },
     "lifecycle_segments": {
-      "big-and-slow": {
-        "n_users": 55132,
-        "pct_of_total": 26.7,
-        "avg_total_orders": 10.9,
-        "median_total_orders": 8.0,
-        "avg_median_gap": 19.1,
-        "pct_heavy": 12.2,
-        "pct_fast_cadence": 10.5,
-        "avg_first_order_size": 14.8,
-        "avg_reorder_rate": 0.341
-      },
-      "big-and-fast": {
-        "n_users": 59334,
-        "pct_of_total": 28.8,
-        "avg_total_orders": 23.2,
-        "median_total_orders": 16.0,
-        "avg_median_gap": 11.2,
-        "pct_heavy": 42.8,
-        "pct_fast_cadence": 41.0,
-        "avg_first_order_size": 14.9,
-        "avg_reorder_rate": 0.365
-      },
       "small-and-slow": {
         "n_users": 47332,
         "pct_of_total": 23.0,
@@ -840,6 +818,17 @@
         "avg_first_order_size": 4.0,
         "avg_reorder_rate": 0.297
       },
+      "big-and-slow": {
+        "n_users": 55132,
+        "pct_of_total": 26.7,
+        "avg_total_orders": 10.9,
+        "median_total_orders": 8.0,
+        "avg_median_gap": 19.1,
+        "pct_heavy": 12.2,
+        "pct_fast_cadence": 10.5,
+        "avg_first_order_size": 14.8,
+        "avg_reorder_rate": 0.341
+      },
       "small-and-fast": {
         "n_users": 44411,
         "pct_of_total": 21.5,
@@ -850,6 +839,17 @@
         "pct_fast_cadence": 41.5,
         "avg_first_order_size": 4.3,
         "avg_reorder_rate": 0.317
+      },
+      "big-and-fast": {
+        "n_users": 59334,
+        "pct_of_total": 28.8,
+        "avg_total_orders": 23.2,
+        "median_total_orders": 16.0,
+        "avg_median_gap": 11.2,
+        "pct_heavy": 42.8,
+        "pct_fast_cadence": 41.0,
+        "avg_first_order_size": 14.9,
+        "avg_reorder_rate": 0.365
       }
     },
     "reorder_curve": {

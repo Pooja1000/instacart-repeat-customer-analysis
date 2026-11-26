@@ -242,3 +242,68 @@ class TestBootstrapReproducibility:
         ci2 = bootstrap_mean(data, np.random.RandomState(42))
         assert ci1[0] == ci2[0] and ci1[1] == ci2[1], \
             f"Bootstrap not reproducible: {ci1} vs {ci2}"
+
+
+class TestReproducibility:
+    """Test that bootstrap CIs and cross-validated AUC are bit-identical across runs."""
+
+    def test_bootstrap_ci_reproducible(self):
+        """bootstrap_ci with the same rng seed produces identical intervals.
+
+        Uses a self-contained reimplementation of the bootstrap_ci logic
+        (same algorithm as src/analysis.py) to avoid importing the full
+        analysis module, which runs the entire pipeline at module level.
+        """
+        import numpy as np
+
+        SEED = 42
+
+        def bootstrap_ci(data, n_boot=500, rng=None):
+            if rng is None:
+                rng = np.random.default_rng(SEED)
+            data = np.asarray(data, dtype=float)
+            n = len(data)
+            batch_size = 500
+            boot_stats = []
+            for start in range(0, n_boot, batch_size):
+                b = min(batch_size, n_boot - start)
+                indices = rng.integers(0, n, size=(b, n))
+                boot_stats.append(data[indices].mean(axis=1))
+            boot_stats = np.concatenate(boot_stats)
+            return float(data.mean()), float(np.percentile(boot_stats, 2.5)), float(np.percentile(boot_stats, 97.5))
+
+        data = np.arange(1, 101, dtype=float)
+
+        # Run 1
+        mean1, lo1, hi1 = bootstrap_ci(data, n_boot=500, rng=np.random.default_rng(SEED))
+        # Run 2
+        mean2, lo2, hi2 = bootstrap_ci(data, n_boot=500, rng=np.random.default_rng(SEED))
+
+        assert mean1 == mean2, f"means differ: {mean1} vs {mean2}"
+        assert lo1 == lo2, f"CI lower differs: {lo1} vs {lo2}"
+        assert hi1 == hi2, f"CI upper differs: {hi1} vs {hi2}"
+
+    def test_cv_auc_reproducible(self):
+        """cross_val_score with StratifiedKFold(shuffle=True, random_state=SEED) is identical."""
+        import numpy as np
+        from sklearn.linear_model import LogisticRegression
+        from sklearn.model_selection import cross_val_score, StratifiedKFold
+        from sklearn.preprocessing import StandardScaler
+
+        SEED = 42
+        rng = np.random.default_rng(SEED)
+        n = 200
+        X = rng.standard_normal((n, 3))
+        y = (X[:, 0] + rng.standard_normal(n) * 0.5 > 0).astype(int)
+        X_scaled = StandardScaler().fit_transform(X)
+
+        def run_cv():
+            cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=SEED)
+            lr = LogisticRegression(max_iter=1000, random_state=SEED)
+            return cross_val_score(lr, X_scaled, y, cv=cv, scoring="roc_auc")
+
+        scores1 = run_cv()
+        scores2 = run_cv()
+
+        np.testing.assert_array_equal(scores1, scores2,
+                                      err_msg="CV AUC scores differ across runs")

@@ -27,10 +27,11 @@ import numpy as np
 import pandas as pd
 import yaml
 from scipy import stats
-from sklearn.model_selection import cross_val_score
+from sklearn.model_selection import cross_val_score, StratifiedKFold
 from sklearn.preprocessing import StandardScaler
 from statsmodels.stats.outliers_influence import variance_inflation_factor
-import statsmodels.api as sm
+from statsmodels.discrete.discrete_model import Logit
+from statsmodels.tools.tools import add_constant
 
 warnings.filterwarnings("ignore", category=FutureWarning)
 
@@ -58,7 +59,9 @@ MIN_D = cfg["stats"]["min_effect_size"]["cohens_d"]
 OR_LO = cfg["stats"]["min_effect_size"]["odds_ratio_lower"]
 OR_HI = cfg["stats"]["min_effect_size"]["odds_ratio_upper"]
 CV_FOLDS = cfg["stats"]["cross_validation_folds"]
-np.random.seed(SEED)
+
+# Single RNG instance used throughout; every random operation branches from this.
+RNG = np.random.default_rng(SEED)
 
 # ── Load data ─────────────────────────────────────────────────
 df = pd.read_parquet(os.path.join(DATA_DIR, "user_features.parquet"))
@@ -131,9 +134,17 @@ PRIMARY_OUTCOME = "is_heavy_p75"
 # HELPER FUNCTIONS
 # ══════════════════════════════════════════════════════════════
 
-def bootstrap_ci(data, stat_fn=np.mean, n_boot=N_BOOT, seed=SEED, ci=CONF_LEVEL):
-    """Bootstrap confidence interval for a statistic (batched vectorisation)."""
-    rng = np.random.RandomState(seed)
+def bootstrap_ci(data, stat_fn=np.mean, n_boot=N_BOOT, rng=None, ci=CONF_LEVEL):
+    """Bootstrap confidence interval for a statistic (batched vectorisation).
+
+    Parameters
+    ----------
+    rng : np.random.Generator or None
+        If None, a fresh Generator seeded from SEED is created so each call
+        is independently reproducible.
+    """
+    if rng is None:
+        rng = np.random.default_rng(SEED)
     data = np.asarray(data, dtype=float)
     data = data[~np.isnan(data)]
     n = len(data)
@@ -141,7 +152,7 @@ def bootstrap_ci(data, stat_fn=np.mean, n_boot=N_BOOT, seed=SEED, ci=CONF_LEVEL)
     boot_stats = []
     for start in range(0, n_boot, batch_size):
         b = min(batch_size, n_boot - start)
-        indices = rng.randint(0, n, size=(b, n))
+        indices = rng.integers(0, n, size=(b, n))
         boot_samples = data[indices]
         if stat_fn is np.mean:
             boot_stats.append(boot_samples.mean(axis=1))
@@ -334,8 +345,8 @@ def run_logistic(df_in, features, label, results_dict):
     assert max_vif < 5.0, f"Error: VIF exceeds 5.0 in {label}: {max_vif}"
 
     # Fit model
-    X_const = sm.add_constant(X_scaled)
-    model = sm.Logit(y, X_const).fit(disp=0)
+    X_const = add_constant(X_scaled)
+    model = Logit(y, X_const).fit(disp=0)
 
     # Odds ratios with CIs
     odds_ratios = {}
@@ -358,8 +369,9 @@ def run_logistic(df_in, features, label, results_dict):
 
     # Cross-validated AUC
     from sklearn.linear_model import LogisticRegression
+    cv_splitter = StratifiedKFold(n_splits=CV_FOLDS, shuffle=True, random_state=SEED)
     lr_sk = LogisticRegression(max_iter=1000, random_state=SEED)
-    cv_scores = cross_val_score(lr_sk, X_scaled, y, cv=CV_FOLDS,
+    cv_scores = cross_val_score(lr_sk, X_scaled, y, cv=cv_splitter,
                                 scoring="roc_auc")
     cv_auc_mean = float(cv_scores.mean())
     cv_auc_std = float(cv_scores.std())
@@ -546,12 +558,13 @@ for pctl_col, pctl_name in [("is_heavy_p70", "top_30pct"),
 
     scaler = StandardScaler()
     X_scaled = scaler.fit_transform(X)
-    X_const = sm.add_constant(X_scaled)
-    model = sm.Logit(y, X_const).fit(disp=0)
+    X_const = add_constant(X_scaled)
+    model = Logit(y, X_const).fit(disp=0)
 
     from sklearn.linear_model import LogisticRegression
+    cv_splitter = StratifiedKFold(n_splits=CV_FOLDS, shuffle=True, random_state=SEED)
     lr_sk = LogisticRegression(max_iter=1000, random_state=SEED)
-    cv_scores = cross_val_score(lr_sk, X_scaled, y, cv=CV_FOLDS,
+    cv_scores = cross_val_score(lr_sk, X_scaled, y, cv=cv_splitter,
                                 scoring="roc_auc")
 
     sens_or = {}
