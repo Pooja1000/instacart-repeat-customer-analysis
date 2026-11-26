@@ -108,7 +108,7 @@ of the second order.
 | **Pricing Caveat** | The dataset contains no product prices, delivery fees, or margins. Incentive cost per incremental order must be evaluated using production financial unit economics. |
 | **Baseline & Sample Sizing Note** | **The data cannot provide a baseline return rate, so sample size must be estimated from production data.** See Sample Size Planning table below. |
 | **Duration** | 2 weeks enrolment + 30-day post-trigger observation. |
-| **Stop Criteria** | Stop if incentive cost per incrementally retained customer exceeds allowable customer acquisition cost (CAC) threshold. |
+| **Stop Criteria** | Stop if incentive cost per incremental order exceeds allowable customer acquisition cost (CAC) threshold. |
 
 ---
 
@@ -148,7 +148,7 @@ Because this historical dataset suffers from survivorship bias (all customers pl
 
 The table below provides required sample sizes (per-arm and total) for a two-sided two-proportion test at alpha = 0.05 and 80% statistical power across hypothetical baseline conversion rates (20%, 30%, 40%, 50%) and minimum detectable effects (+2%, +3%, +4% percentage points). Do not treat any baseline below as realistic or established for production.
 
-**Formula**: Sample sizes are computed using the unpooled variance formula for two independent proportions (no continuity correction): $n = (z_{\alpha/2} \sqrt{2 \bar p (1-\bar p)} + z_\beta \sqrt{p_1(1-p_1)+p_2(1-p_2)})^2 / (p_2-p_1)^2$, where $\bar p = (p_1+p_2)/2$, implemented via `scipy.stats.norm.ppf`.
+**Formula**: Sample sizes are computed using the standard two-proportion formula with pooled variance under the null (no continuity correction): $n = (z_{\alpha/2} \sqrt{2 \bar p (1-\bar p)} + z_\beta \sqrt{p_1(1-p_1)+p_2(1-p_2)})^2 / (p_2-p_1)^2$, where $\bar p = (p_1+p_2)/2$, implemented via `scipy.stats.norm.ppf`.
 
 | Baseline Conversion Rate | MDE (+ percentage points) | Sample Size Per Arm (n) | Total Sample Size (2n) |
 |---|---|---|---|
